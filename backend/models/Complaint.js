@@ -1,4 +1,3 @@
-// Complaint Mongoose schema
 const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
@@ -7,8 +6,9 @@ const complaintSchema = new Schema(
   {
     complaintId: {
       type: String,
-      unique: true,
       required: true,
+      unique: true,
+      trim: true,
     },
 
     title: {
@@ -21,21 +21,6 @@ const complaintSchema = new Schema(
       type: String,
       required: [true, "Complaint description is required"],
       trim: true,
-    },
-
-    category: {
-      type: String,
-      required: true,
-      enum: [
-        "Road",
-        "Electricity",
-        "Water",
-        "Garbage",
-        "Drainage",
-        "Transport",
-        "Healthcare",
-        "Others",
-      ],
     },
 
     department: {
@@ -63,28 +48,30 @@ const complaintSchema = new Schema(
         "Assigned",
         "In Progress",
         "Resolved",
-        "Rejected",
-        "Closed",
       ],
       default: "Pending",
     },
 
     priority: {
       type: String,
-      enum: ["Low", "Medium", "High"],
+      enum: [
+        "Low",
+        "Medium",
+        "High",
+      ],
       default: "Medium",
     },
 
     location: {
       type: String,
-      required: true,
+      required: [true, "Location is required"],
       trim: true,
     },
 
-    images:[ {
+    images: [
+      {
         type: String,
-        default: "",
-        }
+      },
     ],
 
     adminRemark: {
@@ -99,9 +86,24 @@ const complaintSchema = new Schema(
       trim: true,
     },
 
+    assignedAt: {
+      type: Date,
+      default: null,
+    },
+
+    inProgressAt: {
+      type: Date,
+      default: null,
+    },
+
     resolvedAt: {
       type: Date,
       default: null,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   {

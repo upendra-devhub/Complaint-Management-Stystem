@@ -2,7 +2,7 @@
 const roleMiddleware=(...roles)=>{
     return (req,res,next)=>{
         if(!roles.includes(req.user.role)){
-            return re.status(403).json({
+            return res.status(403).json({
                 success:false,
                 message:'Access denied.'
             })
@@ -11,4 +11,4 @@ const roleMiddleware=(...roles)=>{
     }
 }
 
-m,odule.exports=roleMiddleware;
+module.exports=roleMiddleware;

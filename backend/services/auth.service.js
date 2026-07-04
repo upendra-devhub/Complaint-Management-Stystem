@@ -1,7 +1,6 @@
 // Auth service database operations
 
-const User=require('../models/User'
-)
+const User=require('../models/User')
 const bcrypt=require('bcrypt')
 
 const generateToken = require("../utils/generateToken");
