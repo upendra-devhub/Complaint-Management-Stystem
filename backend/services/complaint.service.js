@@ -6,6 +6,8 @@
 const Complaint=require('../models/Complaint');
 const Department=require('../models/Department');
 
+const User=require('../models/User')
+
 const createComplaintService=async(complaintData,userId)=>{
 
     const{
@@ -66,8 +68,57 @@ const getComplaintByIdService=async(complaintId)=>{
     return complaint
 }
 
+//get all complaints (admin)
+
+ const getAllComplaintsService=async()=>{
+    const complaints=await Complaint.find()
+    .populate('department','name')
+    .populate('createdBy','name email phone')
+    .populate('assignedTo','name email')
+    .sort({createdAt:-1});
+    return complaints;
+ }
+
+
+ //assigning the complaint to the employee
+
+ const assignComplaintService=async(complaintId,employeeId)=>{
+    const complaint=await Complaint.findById(complaintId);
+
+    if(!complaint){
+        throw new Error("Complaint not found");
+    }
+
+    //already assigned?
+
+    if(complaint.status!=='Pending'){
+        throw new Error('Complaint is already assigned');
+    }
+
+    const employee=await User.findById(employeeId);
+
+    if(!employee){
+        throw new Error('Employee not found!');
+    }
+
+    if(employee.role!=='employee'){
+        throw new Error('Selected user is not an employee');
+    }
+
+    complaint.assignedTo=employeeId;
+    complaint.status='Assigned';
+    complaint.assignedAt=new Date();
+
+    await complaint.save();
+
+    return complaint.populate('assignedTo','name email')
+ }
+
+
 module.exports={
     createComplaintService,
     getMyComplaintsService,
-    getComplaintByIdService
+    getComplaintByIdService,
+    getAllComplaintsService,
+    assignComplaintService
 }

@@ -5,7 +5,9 @@
 const {
     createComplaintService,
     getMyComplaintsService,
-    getComplaintByIdService
+    getComplaintByIdService,
+    getAllComplaintsService,
+    assignComplaintService
 }=require('../services/complaint.service')
 
 const sendResponse=require('../utils/response');
@@ -77,8 +79,57 @@ const getComplaintById=async(req,res)=>{
         )
     }
 }
+
+//get all complaints
+
+const getAllComplaints=async(req,res)=>{
+    try{
+        const complaints=await getAllComplaintsService();
+        sendResponse(
+            res,
+            200,
+            true,
+            'Complaints fetched successfully',
+            complaints
+        )
+    }catch(error){
+        sendResponse(
+            res,
+            500,
+            false,
+            error.message
+        )
+    }
+}
+
+// assigning complaints
+
+const assignComplaint=async(req,res)=>{
+    try{
+        const {employeeId}=req.body;
+
+        const complaint=await assignComplaintService(req.params.id,employeeId);
+
+        sendResponse(
+            res,
+            200,
+            true,
+            'Complaint assigned successfully',
+            complaint
+        )
+    }catch(error){
+        sendResponse(
+            res,
+            400,
+            false,
+            error.message
+        )
+    }
+}
 module.exports={
     createComplaint,
     getMyComplaints,
-    getComplaintById
+    getComplaintById,
+    getAllComplaints,
+    assignComplaint
 }

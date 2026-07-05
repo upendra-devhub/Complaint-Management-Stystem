@@ -2,11 +2,14 @@ const express = require("express");
 const router = express.Router();
 
 const authMiddleware=require('../middleware/auth.middleware');
+const roleMiddleware=require('../middleware/role.middleware')
 
 const { 
     createComplaint,
     getMyComplaints,
-    getComplaintById
+    getComplaintById,
+    getAllComplaints,
+    assignComplaint
  }=require('../controllers/complaint.controller');
 
 
@@ -17,4 +20,9 @@ router.post(
 router.get('/my',authMiddleware,getMyComplaints)
 
 router.get('/:id',authMiddleware,getComplaintById)
+
+router.get('/',authMiddleware,roleMiddleware('admin'),getAllComplaints);
+
+router.put('/:id/assign',authMiddleware,roleMiddleware('admin'),assignComplaint)
+
 module.exports = router;
