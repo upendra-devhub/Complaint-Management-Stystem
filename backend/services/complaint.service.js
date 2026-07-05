@@ -114,11 +114,22 @@ const getComplaintByIdService=async(complaintId)=>{
     return complaint.populate('assignedTo','name email')
  }
 
+ //get assigned complaints
+
+ const getAssignedComplaintsService=async(employeeId)=>{
+    const complaints=await Complaint.find({assignedTo:employeeId})
+    .populate('department','name')
+    .populate('createdBy','name email phone')
+    .sort({assignedAt:-1})
+    return complaints;
+ }
+
 
 module.exports={
     createComplaintService,
     getMyComplaintsService,
     getComplaintByIdService,
     getAllComplaintsService,
-    assignComplaintService
+    assignComplaintService,
+    getAssignedComplaintsService
 }

@@ -9,7 +9,8 @@ const {
     getMyComplaints,
     getComplaintById,
     getAllComplaints,
-    assignComplaint
+    assignComplaint,
+    getAssignedComplaints
  }=require('../controllers/complaint.controller');
 
 
@@ -18,6 +19,8 @@ router.post(
 )
 
 router.get('/my',authMiddleware,getMyComplaints)
+
+router.get('/assigned',authMiddleware,roleMiddleware('employee'),getAssignedComplaints)
 
 router.get('/:id',authMiddleware,getComplaintById)
 
