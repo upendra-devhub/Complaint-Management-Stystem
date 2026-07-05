@@ -18,7 +18,9 @@ const sendResponse=require('../utils/response');
 
 const createComplaint=async (req,res)=>{
     try{
-        const complaint=await createComplaintService(req.body, req.user.id);
+        const imageUrls=req.files?req.files.map(file=>file.path):[];
+
+        const complaint=await createComplaintService(req.body, req.user.id, imageUrls);
 
         sendResponse(
             res,

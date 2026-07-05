@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authMiddleware=require('../middleware/auth.middleware');
 const roleMiddleware=require('../middleware/role.middleware')
+const upload=require('../middleware/upload.middleware');
 
 const { 
     createComplaint,
@@ -16,7 +17,7 @@ const {
 
 
 router.post(
-    '/',authMiddleware,createComplaint
+    '/',authMiddleware,upload.array('images',5),createComplaint
 )
 
 router.get('/my',authMiddleware,getMyComplaints)

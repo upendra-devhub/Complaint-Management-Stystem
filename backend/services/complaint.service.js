@@ -8,14 +8,13 @@ const Department=require('../models/Department');
 
 const User=require('../models/User')
 
-const createComplaintService=async(complaintData,userId)=>{
+const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
 
     const{
         title,
         description,
         department,
-        location,
-        images
+        location
     }=complaintData;
 
 
@@ -40,7 +39,7 @@ const createComplaintService=async(complaintData,userId)=>{
         department,
         createdBy: userId,
         location,
-        images:images||[],
+        images:imageUrls,
         priority:'Medium',
         status:"Pending"
     });
