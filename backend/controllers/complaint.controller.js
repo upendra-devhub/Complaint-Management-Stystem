@@ -8,7 +8,8 @@ const {
     getComplaintByIdService,
     getAllComplaintsService,
     assignComplaintService,
-    getAssignedComplaintsService
+    getAssignedComplaintsService,
+    updateComplaintStatusService
 }=require('../services/complaint.service')
 
 const sendResponse=require('../utils/response');
@@ -151,11 +152,41 @@ const getAssignedComplaints=async(req,res)=>{
     }
 }
 
+//updating the status 
+
+const updateComplaintStatus=async(req,res)=>{
+    try{
+        const{status,employeeRemark}=req.body;
+        const complaint=await updateComplaintStatusService(
+            req.params.id,
+            req.user.id,
+            status,
+            employeeRemark
+        );
+
+        sendResponse(
+            res,
+            200,
+            true,
+            'Complaint status updated successfully',
+            complaint
+        )
+    }catch(error){
+        sendResponse(
+            res,
+            400,
+            false,
+            error.message
+        )
+    }
+}
+
 module.exports={
     createComplaint,
     getMyComplaints,
     getComplaintById,
     getAllComplaints,
     assignComplaint,
-    getAssignedComplaints
+    getAssignedComplaints,
+    updateComplaintStatus
 }

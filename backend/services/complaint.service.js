@@ -82,38 +82,66 @@ const getComplaintByIdService=async(complaintId)=>{
 
  //assigning the complaint to the employee
 
- const assignComplaintService=async(complaintId,employeeId)=>{
-    const complaint=await Complaint.findById(complaintId);
+const assignComplaintService = async (complaintId, employeeId) => {
 
-    if(!complaint){
+    // Check Complaint
+    const complaint = await Complaint.findById(complaintId);
+
+    if (!complaint) {
         throw new Error("Complaint not found");
     }
 
-    //already assigned?
-
-    if(complaint.status!=='Pending'){
-        throw new Error('Complaint is already assigned');
+    // Check if complaint is already assigned
+    if (complaint.assignedTo) {
+        throw new Error("Complaint is already assigned.");
     }
 
-    const employee=await User.findById(employeeId);
-
-    if(!employee){
-        throw new Error('Employee not found!');
+    // Complaint must be in Pending state
+    if (complaint.status !== "Pending") {
+        throw new Error("Only pending complaints can be assigned.");
     }
 
-    if(employee.role!=='employee'){
-        throw new Error('Selected user is not an employee');
+    // Check Employee
+    const employee = await User.findById(employeeId);
+
+    if (!employee) {
+        throw new Error("Employee not found");
     }
 
-    complaint.assignedTo=employeeId;
-    complaint.status='Assigned';
-    complaint.assignedAt=new Date();
+    // Ensure selected user is an employee
+    if (employee.role !== "employee") {
+        throw new Error("Selected user is not an employee");
+    }
+
+    // Ensure employee belongs to the same department
+    if (employee.department.toString() !== complaint.department.toString()) {
+        throw new Error(
+            "Employee does not belong to the complaint's department."
+        );
+    }
+
+    // Assign complaint
+    complaint.assignedTo = employeeId;
+    complaint.status = "Assigned";
+    complaint.assignedAt = new Date();
 
     await complaint.save();
 
-    return complaint.populate('assignedTo','name email')
- }
-
+    return complaint.populate([
+        {
+            path: "department",
+            select: "name"
+        },
+        {
+            path: "createdBy",
+            select: "name email"
+        },
+        {
+            path: "assignedTo",
+            select: "name email"
+        }
+    ]);
+};
  //get assigned complaints
 
  const getAssignedComplaintsService=async(employeeId)=>{
@@ -124,6 +152,106 @@ const getComplaintByIdService=async(complaintId)=>{
     return complaints;
  }
 
+ //update complaint status
+
+const updateComplaintStatusService = async (
+    complaintId,
+    employeeId,
+    status,
+    employeeRemark
+) => {
+
+    const complaint = await Complaint.findById(complaintId);
+
+    if (!complaint) {
+        throw new Error("Complaint not found");
+    }
+
+    // Make sure this complaint is assigned to this employee
+    if (
+        !complaint.assignedTo ||
+        complaint.assignedTo.toString() !== employeeId
+    ) {
+        throw new Error("You are not assigned to this complaint");
+    }
+
+    // Only these statuses can be updated by employee
+    const allowedStatuses = [
+        "In Progress",
+        "Resolved"
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+        throw new Error("Invalid status");
+    }
+
+
+    // Workflow Validation
+
+
+    // Assigned -> In Progress
+    if (
+        complaint.status === "Assigned" &&
+        status !== "In Progress"
+    ) {
+        throw new Error(
+            "Complaint must first be marked as In Progress."
+        );
+    }
+
+    // In Progress -> Resolved
+    if (
+        complaint.status === "In Progress" &&
+        status !== "Resolved"
+    ) {
+        throw new Error(
+            "Complaint can only be marked as Resolved."
+        );
+    }
+
+    // Already Resolved
+    if (complaint.status === "Resolved") {
+        throw new Error(
+            "Complaint has already been resolved."
+        );
+    }
+
+
+    // Update Status
+
+
+    complaint.status = status;
+
+    if (employeeRemark) {
+        complaint.employeeRemark = employeeRemark;
+    }
+
+    if (status === "In Progress") {
+        complaint.inProgressAt = new Date();
+    }
+
+    if (status === "Resolved") {
+        complaint.resolvedAt = new Date();
+    }
+
+    await complaint.save();
+
+    return complaint.populate([
+        {
+            path: "department",
+            select: "name"
+        },
+        {
+            path: "createdBy",
+            select: "name email"
+        },
+        {
+            path: "assignedTo",
+            select: "name email"
+        }
+    ]);
+};
+
 
 module.exports={
     createComplaintService,
@@ -131,5 +259,6 @@ module.exports={
     getComplaintByIdService,
     getAllComplaintsService,
     assignComplaintService,
-    getAssignedComplaintsService
+    getAssignedComplaintsService,
+    updateComplaintStatusService
 }
