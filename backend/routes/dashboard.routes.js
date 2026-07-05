@@ -6,7 +6,9 @@ const authMiddleware = require("../middleware/auth.middleware");
 const roleMiddleware = require("../middleware/role.middleware");
 
 const {
-    getAdminDashboard
+    getAdminDashboard,
+    getEmployeeDashboard,
+    getUserDashboard
 } = require("../controllers/dashboard.controller");
 
 router.get(
@@ -14,6 +16,20 @@ router.get(
     authMiddleware,
     roleMiddleware("admin"),
     getAdminDashboard
+);
+
+router.get(
+    "/employee",
+    authMiddleware,
+    roleMiddleware("employee"),
+    getEmployeeDashboard
+);
+
+router.get(
+    "/user",
+    authMiddleware,
+    roleMiddleware("user"),
+    getUserDashboard
 );
 
 module.exports = router;
