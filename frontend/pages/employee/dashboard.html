@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/animations.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/table.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body data-role="employee" data-page="dashboard" data-title="Employee Dashboard">
+    <div class="page-backdrop"></div>
+    <div id="toast-root"></div>
+    <div class="app-shell">
+        <aside class="app-sidebar"></aside>
+        <div class="app-frame">
+            <header class="topbar"></header>
+            <main class="page-content">
+                <section class="page-title">
+                    <span class="eyebrow">Work Overview</span>
+                    <h1>Welcome back.</h1>
+                    <p>Review your assigned work, see the current status split, and keep every complaint moving forward.</p>
+                </section>
+                <section class="card-grid" id="employeeStatCards"></section>
+                <section class="chart-pair">
+                    <article class="panel-card chart-panel">
+                        <div class="section-head"><div><h2>Status Breakdown</h2><p>Assigned work grouped by complaint status.</p></div></div>
+                        <div class="chart-canvas-wrap"><canvas id="employeeStatusChart"></canvas></div>
+                    </article>
+                    <article class="panel-card chart-panel">
+                        <div class="section-head"><div><h2>Priority Mix</h2><p>Current distribution of complaint priority.</p></div></div>
+                        <div class="chart-canvas-wrap"><canvas id="employeePriorityChart"></canvas></div>
+                    </article>
+                </section>
+                <section class="panel-card">
+                    <div class="section-head"><div><h2>Recent Assigned Complaints</h2><p>The latest complaints assigned to you.</p></div></div>
+                    <div class="list-stack" id="employeeRecentComplaints"></div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/authGuard.js"></script>
+    <script src="../../assets/js/dashboard.js"></script>
+</body>
+</html>

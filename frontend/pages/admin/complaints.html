@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Complaints</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/animations.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/table.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body data-role="admin" data-page="complaints" data-title="Complaint Management">
+    <div class="page-backdrop"></div>
+    <div id="toast-root"></div>
+    <div class="app-shell">
+        <aside class="app-sidebar"></aside>
+        <div class="app-frame">
+            <header class="topbar"></header>
+            <main class="page-content">
+                <section class="page-title">
+                    <span class="eyebrow">Admin Module</span>
+                    <h1>Manage and assign complaints.</h1>
+                    <p>Review every complaint in the system, inspect status, and assign pending work to the right employee.</p>
+                </section>
+                <section class="panel-card">
+                    <div class="section-head"><div><h2>All Complaints</h2><p>Use the top search bar to narrow down by complaint ID, title, location, or reporter.</p></div></div>
+                    <div id="adminComplaintsTable"></div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/authGuard.js"></script>
+    <script src="../../assets/js/complaints.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap");
+
+:root {
+    --font-heading: "Poppins", sans-serif;
+    --font-body: "Inter", sans-serif;
+
+    --color-bg: #f5f7ff;
+    --color-bg-soft: #eef3ff;
+    --color-surface: rgba(255, 255, 255, 0.84);
+    --color-surface-strong: #ffffff;
+    --color-surface-muted: rgba(255, 255, 255, 0.62);
+    --color-border: rgba(124, 131, 196, 0.18);
+    --color-border-strong: rgba(108, 115, 189, 0.3);
+    --color-text: #1b2240;
+    --color-text-soft: #66729a;
+    --color-text-faint: #97a0bc;
+
+    --color-primary: #6a5cff;
+    --color-primary-strong: #5845f5;
+    --color-primary-soft: #ebe7ff;
+    --color-secondary: #7cccf8;
+    --color-secondary-soft: #e7f7ff;
+    --color-success: #39c38a;
+    --color-success-soft: #e4f9ef;
+    --color-warning: #ffb64f;
+    --color-warning-soft: #fff1de;
+    --color-danger: #ff5e7a;
+    --color-danger-soft: #ffe5ec;
+    --color-info: #4a90ff;
+    --color-info-soft: #e8f1ff;
+
+    --shadow-soft: 0 20px 60px rgba(128, 135, 192, 0.16);
+    --shadow-card: 0 14px 34px rgba(153, 160, 220, 0.14);
+    --shadow-hover: 0 20px 44px rgba(114, 121, 193, 0.22);
+    --shadow-auth: 0 28px 70px rgba(111, 121, 212, 0.24);
+
+    --radius-xs: 10px;
+    --radius-sm: 16px;
+    --radius-md: 24px;
+    --radius-lg: 32px;
+    --radius-xl: 40px;
+
+    --transition: 180ms ease;
+    --layout-max: 1540px;
+    --sidebar-width: 270px;
+    --topbar-height: 88px;
+}

@@ -55,15 +55,33 @@ const getMyComplaintsService=async(userId)=>{
 
 //getComplaintById
 
-const getComplaintByIdService=async(complaintId)=>{
+const getComplaintByIdService=async(complaintId, user)=>{
     const complaint=await Complaint.findById(complaintId)
     .populate('department','name description')
     .populate('createdBy','name email phone')
     .populate('assignedTo','name email phone');
 
     if(!complaint){
-        throw new Error("Complaint not found!")
+        const error = new Error("Complaint not found!");
+        error.statusCode = 404;
+        throw error;
     }
+
+    if (user.role === 'user' && complaint.createdBy._id.toString() !== user.id) {
+        const error = new Error("Access denied");
+        error.statusCode = 403;
+        throw error;
+    }
+
+    if (
+        user.role === 'employee' &&
+        (!complaint.assignedTo || complaint.assignedTo._id.toString() !== user.id)
+    ) {
+        const error = new Error("Access denied");
+        error.statusCode = 403;
+        throw error;
+    }
+
     return complaint
 }
 

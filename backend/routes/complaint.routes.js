@@ -17,7 +17,11 @@ const {
 
 
 router.post(
-    '/',authMiddleware,upload.array('images',5),createComplaint
+    '/',
+    authMiddleware,
+    roleMiddleware('user'),
+    upload.array('images',5),
+    createComplaint
 )
 
 router.get('/my',authMiddleware,getMyComplaints)

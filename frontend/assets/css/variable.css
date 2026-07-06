@@ -1,0 +1,87 @@
+/* ===========================
+   Google Fonts
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+
+/* ===========================
+   Root Variables
+=========================== */
+
+:root{
+
+    /* Fonts */
+
+    --heading-font:"Poppins",sans-serif;
+
+    --body-font:"Inter",sans-serif;
+
+
+    /* Primary */
+
+    --primary:#6366F1;
+
+    --primary-light:#8B5CF6;
+
+    --primary-dark:#4338CA;
+
+
+    /* Status */
+
+    --success:#10B981;
+
+    --warning:#F59E0B;
+
+    --danger:#EF4444;
+
+
+    /* Background */
+
+    --bg-dark:#020617;
+
+    --bg-light:#F8FAFC;
+
+
+    /* Text */
+
+    --text-white:#FFFFFF;
+
+    --text-light:#CBD5E1;
+
+    --text-dark:#1E293B;
+
+
+    /* Glass */
+
+    --glass-bg:rgba(255,255,255,.08);
+
+    --glass-border:rgba(255,255,255,.15);
+
+    --glass-blur:20px;
+
+
+    /* Radius */
+
+    --radius-sm:10px;
+
+    --radius-md:18px;
+
+    --radius-lg:28px;
+
+
+    /* Shadows */
+
+    --shadow:
+
+    0 8px 32px rgba(0,0,0,.25);
+
+    --shadow-hover:
+
+    0 15px 40px rgba(0,0,0,.35);
+
+
+    /* Transition */
+
+    --transition:.35s ease;
+}

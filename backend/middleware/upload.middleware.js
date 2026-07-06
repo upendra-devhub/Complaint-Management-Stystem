@@ -1,21 +1,32 @@
-const multer=require('multer');
-const CloudinaryStorage=require('multer-storage-cloudinary');
-const cloudinary=require('../config/cloudinary');
+const multer = require("multer");
+const CloudinaryStorage = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-const storage=new CloudinaryStorage({
-    cloudinary:cloudinary,
-    params:{
-        folder:'complaint-management-system',
-        allowed_formats:['jpg','jpeg','png','webp'],
-        transformation:[{width:1024,height:1024,crop:'limit'}]
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "complaint-management-system",
+        allowed_formats: [
+            "jpg",
+            "jpeg",
+            "png",
+            "webp"
+        ],
+        transformation: [
+            {
+                width: 1024,
+                height: 1024,
+                crop: "limit"
+            }
+        ]
     }
 });
 
-const upload=multer({
-    storage:storage,
-    limits:{
-        fileSize:5*1024*1024
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024
     }
 });
 
-module.exports=upload;
+module.exports = upload;

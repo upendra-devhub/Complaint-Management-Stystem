@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/animations.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/table.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body data-role="admin" data-page="departments" data-title="Department Management">
+    <div class="page-backdrop"></div>
+    <div id="toast-root"></div>
+    <div class="app-shell">
+        <aside class="app-sidebar"></aside>
+        <div class="app-frame">
+            <header class="topbar"></header>
+            <main class="page-content">
+                <section class="page-title">
+                    <span class="eyebrow">Admin Module</span>
+                    <h1>Departments and routing structure.</h1>
+                    <p>Create, update, and delete departments without changing any backend route naming.</p>
+                </section>
+                <section class="two-column">
+                    <article class="panel-card">
+                        <div class="section-head"><div><h2>Create or update department</h2><p>Use one form for both create and edit flows.</p></div></div>
+                        <form id="departmentForm" class="form-grid">
+                            <input type="hidden" name="departmentId">
+                            <div class="form-field">
+                                <label for="name">Department Name</label>
+                                <input class="field-control" id="name" name="name" type="text" placeholder="Enter department name" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="description">Description</label>
+                                <textarea class="field-textarea" id="description" name="description" placeholder="Add a short department description"></textarea>
+                            </div>
+                            <button class="btn btn-primary" type="submit" data-submit-label>Create Department</button>
+                        </form>
+                    </article>
+                    <section class="stack" id="departmentList"></section>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/authGuard.js"></script>
+    <script src="../../assets/js/departments.js"></script>
+</body>
+</html>

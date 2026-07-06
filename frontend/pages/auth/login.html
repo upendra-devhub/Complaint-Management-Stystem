@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Management System | Login</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/auth.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="auth-body">
+    <div id="toast-root"></div>
+    <main class="auth-shell">
+        <section class="auth-hero" style="--auth-bg:url('../../assets/images/auth-login-bg.png')">
+            <div class="auth-brand">
+                <div class="brand-mark"><i class="bi bi-shield-check"></i></div>
+                <div class="brand-copy"><strong>Complaint</strong><span>Management System</span></div>
+            </div>
+            <div class="auth-hero-content">
+                <span class="eyebrow">Welcome Back</span>
+                <h1>Track community issues with confidence.</h1>
+                <p>Stay connected to complaints, assignments, and service updates from one streamlined dashboard.</p>
+            </div>
+            <div class="auth-highlights">
+                <article class="auth-highlight">
+                    <i class="bi bi-clipboard-check"></i>
+                    <div><strong>Easy Reporting</strong><p>File issues with clear details, location, and supporting evidence.</p></div>
+                </article>
+                <article class="auth-highlight">
+                    <i class="bi bi-broadcast"></i>
+                    <div><strong>Status Tracking</strong><p>Follow complaint movement from pending to resolved.</p></div>
+                </article>
+                <article class="auth-highlight">
+                    <i class="bi bi-shield-lock"></i>
+                    <div><strong>Role Aware</strong><p>Each dashboard is tailored for citizens, employees, and admins.</p></div>
+                </article>
+            </div>
+        </section>
+        <section class="auth-panel">
+            <div class="auth-panel-inner">
+                <div class="auth-icon"><i class="bi bi-lock"></i></div>
+                <div class="auth-header">
+                    <h2>Login to your account</h2>
+                    <p>Please enter your credentials to continue.</p>
+                </div>
+                <form id="loginForm" class="form-grid">
+                    <div class="form-field">
+                        <label for="email">Email Address</label>
+                        <div class="field-addon">
+                            <i class="bi bi-envelope"></i>
+                            <input class="field-control" id="email" name="email" type="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="password">Password</label>
+                        <div class="field-addon">
+                            <i class="bi bi-lock"></i>
+                            <input class="field-control" id="password" name="password" type="password" placeholder="Enter your password" required>
+                            <i class="bi bi-eye-slash toggle-password" data-target="password"></i>
+                        </div>
+                    </div>
+                    <div class="checkbox-row">
+                        <label class="check"><input type="checkbox">Remember me</label>
+                        <a class="inline-link" href="#" data-forgot-password>Forgot Password?</a>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Login <i class="bi bi-arrow-right"></i></button>
+                </form>
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="register.html">Register</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+.form-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.form-field {
+    display: grid;
+    gap: 8px;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.field-control,
+.field-select,
+.field-textarea {
+    min-height: 50px;
+    width: 100%;
+    padding: 0 16px;
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--color-text);
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.field-textarea {
+    min-height: 140px;
+    padding: 14px 16px;
+    resize: vertical;
+}
+
+.field-control:focus,
+.field-select:focus,
+.field-textarea:focus {
+    border-color: rgba(106, 92, 255, 0.38);
+    box-shadow: 0 0 0 4px rgba(106, 92, 255, 0.12);
+    background: #fff;
+}
+
+.field-addon {
+    position: relative;
+}
+
+.field-addon i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--color-text-faint);
+}
+
+.field-addon .field-control {
+    padding-left: 46px;
+}
+
+.field-addon .toggle-password {
+    left: auto;
+    right: 16px;
+    cursor: pointer;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.check {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text-soft);
+}
+
+.check input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+}
+
+.helper-text {
+    font-size: 0.9rem;
+    color: var(--color-text-soft);
+}
+
+.upload-dropzone {
+    padding: 22px;
+    border-radius: 22px;
+    border: 1.5px dashed rgba(106, 92, 255, 0.28);
+    background: rgba(241, 238, 255, 0.4);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+}
+
+.preview-card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--color-border);
+}
+
+.preview-card img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.preview-card span {
+    display: block;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    color: var(--color-text-soft);
+}

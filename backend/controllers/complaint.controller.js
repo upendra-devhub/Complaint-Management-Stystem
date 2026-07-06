@@ -65,7 +65,7 @@ const getMyComplaints=async(req,res)=>
 
 const getComplaintById=async(req,res)=>{
     try{
-        const complaint=await getComplaintByIdService(req.params.id);
+        const complaint=await getComplaintByIdService(req.params.id, req.user);
 
         sendResponse(
             res,
@@ -77,7 +77,7 @@ const getComplaintById=async(req,res)=>{
     }catch(error){
         sendResponse(
             res,
-            404,
+            error.statusCode || 404,
             false,
             error.message
         )

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/animations.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/table.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body data-role="admin" data-page="dashboard" data-title="Admin Dashboard">
+    <div class="page-backdrop"></div>
+    <div id="toast-root"></div>
+    <div class="app-shell">
+        <aside class="app-sidebar"></aside>
+        <div class="app-frame">
+            <header class="topbar"></header>
+            <main class="page-content">
+                <section class="page-title">
+                    <span class="eyebrow">System Overview</span>
+                    <h1>Welcome back, Admin.</h1>
+                    <p>Monitor complaint flow, staffing, and department performance from one clear command center.</p>
+                </section>
+                <section class="card-grid" id="adminStatCards"></section>
+                <section class="chart-pair">
+                    <article class="panel-card chart-panel">
+                        <div class="section-head"><div><h2>Complaint Status</h2><p>Live distribution by status from the dashboard API.</p></div></div>
+                        <div class="chart-canvas-wrap"><canvas id="adminStatusChart"></canvas></div>
+                    </article>
+                    <article class="panel-card chart-panel">
+                        <div class="section-head"><div><h2>Priority Split</h2><p>Current complaint priority mix.</p></div></div>
+                        <div class="chart-canvas-wrap"><canvas id="adminPriorityChart"></canvas></div>
+                    </article>
+                </section>
+                <section class="analytics-grid">
+                    <article class="panel-card chart-panel">
+                        <div class="section-head"><div><h2>Department Distribution</h2><p>Complaint volume across departments.</p></div></div>
+                        <div class="chart-canvas-wrap"><canvas id="adminDepartmentChart"></canvas></div>
+                    </article>
+                    <article class="panel-card">
+                        <div class="section-head"><div><h2>Quick Actions</h2><p>Move quickly between admin workflows.</p></div></div>
+                        <div class="quick-actions">
+                            <a class="quick-action" href="complaints.html"><i class="bi bi-person-workspace"></i><div><strong>Assign Complaints</strong><p>Map complaints to employees.</p></div></a>
+                            <a class="quick-action" href="departments.html"><i class="bi bi-diagram-3"></i><div><strong>Departments</strong><p>Create and maintain departments.</p></div></a>
+                            <a class="quick-action" href="employees.html"><i class="bi bi-people"></i><div><strong>Employees</strong><p>Onboard and manage employees.</p></div></a>
+                        </div>
+                    </article>
+                </section>
+                <section class="panel-card">
+                    <div class="section-head"><div><h2>Recent Complaints</h2><p>Newest complaints coming into the system.</p></div></div>
+                    <div class="list-stack" id="adminRecentComplaints"></div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/authGuard.js"></script>
+    <script src="../../assets/js/dashboard.js"></script>
+</body>
+</html>
