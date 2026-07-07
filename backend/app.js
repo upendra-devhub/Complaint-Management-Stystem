@@ -6,6 +6,8 @@ const departmentRoutes=require('./routes/department.routes')
 const employeeRoutes=require('./routes/employee.routes')
 const complaintRoutes=require('./routes/complaint.routes')
 const dashboardRoutes=require('./routes/dashboard.routes')
+const userRoutes = require("./routes/user.routes");
+const adminRoutes = require("./routes/admin.routes");
 const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
@@ -19,6 +21,8 @@ app.use('/api/v1/departments',departmentRoutes);
 app.use('/api/v1/employees',employeeRoutes)
 app.use('/api/v1/complaints',complaintRoutes)
 app.use('/api/v1/dashboard',dashboardRoutes)
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

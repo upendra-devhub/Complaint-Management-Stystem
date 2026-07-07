@@ -18,7 +18,11 @@ const sendResponse=require('../utils/response');
 
 const createComplaint=async (req,res)=>{
     try{
-        const imageUrls=req.files?req.files.map(file=>file.path):[];
+        const imageUrls = req.files
+            ? req.files
+                .map((file) => file.secure_url || file.url || file.path)
+                .filter(Boolean)
+            : [];
 
         const complaint=await createComplaintService(req.body, req.user.id, imageUrls);
 

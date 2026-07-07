@@ -37,6 +37,10 @@
         localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(payload.user));
     }
 
+    function setStoredUser(user) {
+        localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
+    }
+
     function clearSession() {
         localStorage.removeItem(STORAGE_KEYS.token);
         localStorage.removeItem(STORAGE_KEYS.user);
@@ -175,6 +179,24 @@
                 method: "PUT",
                 body: JSON.stringify(payload)
             });
+        },
+        getMyProfile: function () {
+            return request("/users/me");
+        },
+        updateMyProfile: function (payload) {
+            return request("/users/me", {
+                method: "PUT",
+                body: JSON.stringify(payload)
+            });
+        },
+        getAdminProfile: function () {
+            return request("/admin/me");
+        },
+        updateAdminProfile: function (payload) {
+            return request("/admin/me", {
+                method: "PUT",
+                body: JSON.stringify(payload)
+            });
         }
     };
 
@@ -186,6 +208,7 @@
         getUser: getUser,
         setSession: setSession,
         clearSession: clearSession,
+        setStoredUser: setStoredUser,
         redirectToLogin: redirectToLogin,
         redirectByRole: redirectByRole,
         resolve: resolve,

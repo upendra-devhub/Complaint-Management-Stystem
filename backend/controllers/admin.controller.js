@@ -4,7 +4,7 @@ const {
     updateCurrentUserProfileService
 } = require("../services/user.service");
 
-const getCurrentUserProfile = async (req, res) => {
+const getCurrentAdminProfile = async (req, res) => {
     try {
         const profile = await getCurrentUserProfileService(req.user.id);
 
@@ -12,7 +12,7 @@ const getCurrentUserProfile = async (req, res) => {
             res,
             200,
             true,
-            "Profile fetched successfully",
+            "Admin profile fetched successfully",
             profile
         );
     } catch (error) {
@@ -25,7 +25,7 @@ const getCurrentUserProfile = async (req, res) => {
     }
 };
 
-const updateCurrentUserProfile = async (req, res) => {
+const updateCurrentAdminProfile = async (req, res) => {
     try {
         const profile = await updateCurrentUserProfileService(req.user.id, req.body);
 
@@ -33,7 +33,7 @@ const updateCurrentUserProfile = async (req, res) => {
             res,
             200,
             true,
-            "Profile updated successfully",
+            "Admin profile updated successfully",
             profile
         );
     } catch (error) {
@@ -47,6 +47,6 @@ const updateCurrentUserProfile = async (req, res) => {
 };
 
 module.exports = {
-    getCurrentUserProfile,
-    updateCurrentUserProfile
+    getCurrentAdminProfile,
+    updateCurrentAdminProfile
 };
