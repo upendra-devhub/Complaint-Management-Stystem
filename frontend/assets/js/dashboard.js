@@ -25,12 +25,82 @@
 
     function renderAdminDashboard(data) {
         document.getElementById("adminStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", data.cards.totalComplaints, "Live system total"),
-            utils.statCard("kpi-blue", "bi-people", "Total Employees", data.cards.totalEmployees, "Team members onboarded"),
-            utils.statCard("kpi-green", "bi-diagram-3", "Departments", data.cards.totalDepartments, "Active operational units")
+            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", data.cards.totalComplaints, ""),
+            utils.statCard("kpi-blue", "bi-people", "Total Employees", data.cards.totalEmployees, ""),
+            utils.statCard("kpi-green", "bi-diagram-3", "Departments", data.cards.totalDepartments, "")
         ].join("");
 
-        renderComplaintList(document.getElementById("adminRecentComplaints"), data.recentComplaints || [], "No recent complaints yet");
+        var adminComplaints = data.recentComplaints || [];
+        var adminPage = 0;
+        var perPage = 5;
+        var adminSearchQuery = "";
+
+        function getFilteredComplaints() {
+            if (!adminSearchQuery) return adminComplaints;
+            return adminComplaints.filter(function (c) {
+                var haystack = [
+                    c.title || "",
+                    c.complaintId || "",
+                    c.status || "",
+                    c.department && c.department.name ? c.department.name : ""
+                ].join(" ").toLowerCase();
+                return haystack.indexOf(adminSearchQuery) !== -1;
+            });
+        }
+
+        function renderAdminComplaintPage() {
+            var container = document.getElementById("adminRecentComplaints");
+            if (!container) return;
+
+            var filtered = getFilteredComplaints();
+            var start = adminPage * perPage;
+            var pageItems = filtered.slice(start, start + perPage);
+            var totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+
+            if (!filtered.length) {
+                container.innerHTML = utils.createEmptyState("bi-inbox", adminSearchQuery ? "No matches found" : "No recent complaints yet", adminSearchQuery ? "Try a different search term." : "Data will appear here as soon as the backend returns results.");
+                return;
+            }
+
+            var rows = pageItems.map(function (c) {
+                var detailsHref = window.CMS.session.resolve("pages/user/details.html?id=" + c._id);
+                var statusCls = utils.statusClass ? utils.statusClass(c.status) : (c.status || "pending").toLowerCase();
+                return [
+                    '<div class="complaint-row">',
+                    '<div class="complaint-row-info">',
+                    '<strong>' + utils.escapeHtml(c.title) + '</strong>',
+                    '<span class="complaint-row-meta">' + utils.escapeHtml(c.complaintId || "") + ' &middot; ' + utils.escapeHtml(c.department && c.department.name ? c.department.name : "—") + '</span>',
+                    '</div>',
+                    '<span class="badge ' + statusCls + '">' + utils.escapeHtml(c.status || "Pending") + '</span>',
+                    '<a class="btn btn-secondary btn-sm" href="' + detailsHref + '">View</a>',
+                    '</div>'
+                ].join("");
+            }).join("");
+
+            var paginationHtml = "";
+            if (totalPages > 1) {
+                paginationHtml = '<div class="pagination-controls">';
+                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-prev ' + (adminPage === 0 ? 'disabled' : '') + '><i class="bi bi-chevron-left"></i></button>';
+                paginationHtml += '<span class="pagination-info">' + (adminPage + 1) + ' / ' + totalPages + '</span>';
+                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-next ' + (adminPage >= totalPages - 1 ? 'disabled' : '') + '><i class="bi bi-chevron-right"></i></button>';
+                paginationHtml += '</div>';
+            }
+
+            container.innerHTML = rows + paginationHtml;
+
+            var prevBtn = container.querySelector("[data-admin-prev]");
+            var nextBtn = container.querySelector("[data-admin-next]");
+            if (prevBtn) prevBtn.addEventListener("click", function () { if (adminPage > 0) { adminPage--; renderAdminComplaintPage(); } });
+            if (nextBtn) nextBtn.addEventListener("click", function () { if (adminPage < totalPages - 1) { adminPage++; renderAdminComplaintPage(); } });
+        }
+
+        renderAdminComplaintPage();
+
+        document.addEventListener("cms:search", function (event) {
+            adminSearchQuery = event.detail.query;
+            adminPage = 0;
+            renderAdminComplaintPage();
+        });
 
         utils.mountChart(document.getElementById("adminStatusChart"), {
             type: "line",

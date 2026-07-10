@@ -24,12 +24,11 @@
             <main class="page-content">
                 <section class="page-title">
                     <span class="eyebrow">Admin Module</span>
-                    <h1>Departments and routing structure.</h1>
-                    <p>Create, update, and delete departments without changing any backend route naming.</p>
+                    <h1>Departments</h1>
                 </section>
                 <section class="two-column">
                     <article class="panel-card">
-                        <div class="section-head"><div><h2>Create or update department</h2><p>Use one form for both create and edit flows.</p></div></div>
+                        <div class="section-head"><div><h2>Create or update department</h2></div></div>
                         <form id="departmentForm" class="form-grid">
                             <input type="hidden" name="departmentId">
                             <div class="form-field">
@@ -43,7 +42,14 @@
                             <button class="btn btn-primary" type="submit" data-submit-label>Create Department</button>
                         </form>
                     </article>
-                    <section class="stack" id="departmentList"></section>
+                    <article class="panel-card department-directory-card">
+                        <div class="section-head">
+                            <div>
+                                <h2>Department Directory</h2>
+                            </div>
+                        </div>
+                        <div id="departmentList"></div>
+                    </article>
                 </section>
             </main>
         </div>

@@ -3,20 +3,17 @@
         user: [
             { key: "dashboard", label: "Dashboard", icon: "bi-grid-1x2" },
             { key: "my-complaints", label: "My Complaints", icon: "bi-clipboard-check" },
-            { key: "new-complaint", label: "New Complaint", icon: "bi-plus-square" },
-            { key: "profile", label: "Profile", icon: "bi-person" }
+            { key: "new-complaint", label: "New Complaint", icon: "bi-plus-square" }
         ],
         employee: [
             { key: "dashboard", label: "Dashboard", icon: "bi-grid-1x2" },
-            { key: "assigned", label: "Assigned Complaints", icon: "bi-list-task" },
-            { key: "profile", label: "Profile", icon: "bi-person" }
+            { key: "assigned", label: "Assigned Complaints", icon: "bi-list-task" }
         ],
         admin: [
             { key: "dashboard", label: "Dashboard", icon: "bi-grid-1x2" },
             { key: "complaints", label: "Complaints", icon: "bi-clipboard-data" },
             { key: "departments", label: "Departments", icon: "bi-diagram-3" },
-            { key: "employees", label: "Employees", icon: "bi-people" },
-            { key: "profile", label: "Profile", icon: "bi-person" }
+            { key: "employees", label: "Employees", icon: "bi-people" }
         ]
     };
 
@@ -60,8 +57,8 @@
         },
         admin: {
             className: "admin-promo",
-            title: "Keep the system flowing",
-            body: "Manage departments, allocate work, and keep service quality visible across the board.",
+            title: "Complaints",
+            body: "Review pending issues.",
             action: "Manage Complaints",
             icon: "bi-sliders2",
             href: "pages/admin/complaints.html"
@@ -208,30 +205,35 @@
             '<div class="brand-mark"><i class="bi bi-shield-check"></i></div>',
             '<div class="brand-copy"><strong>Complaint</strong><span>Management System</span></div>',
             "</div>",
-            `<nav class="nav-stack">${items}`,
-            '<button class="nav-link" type="button" data-logout>',
-            '<i class="bi bi-box-arrow-left"></i><span>Logout</span></button></nav>',
+            `<nav class="nav-stack">${items}</nav>`,
             `<div class="sidebar-promo ${promo.className}">`,
             `<div><h3>${promo.title}</h3><p>${promo.body}</p></div>`,
             `<a class="btn btn-primary" href="${window.CMS.session.resolve(promo.href)}"><i class="bi ${promo.icon}"></i>${promo.action}</a>`,
-            `<small class="muted">Signed in as ${escapeHtml(user && user.role ? user.role : role)}</small>`,
             "</div>"
         ].join("");
     }
 
     function renderTopbar(title) {
         const user = window.CMS.session.getUser() || {};
+        const currentRole = user.role || document.body.dataset.role || "user";
+        const profileLink = resolvePage(currentRole, "profile");
         qs(".topbar").innerHTML = [
             '<button type="button" class="btn btn-secondary icon-btn menu-toggle" data-menu-toggle>',
             '<i class="bi bi-list"></i></button>',
-            `<div><h2>${escapeHtml(title)}</h2><p class="muted">Connected to ${escapeHtml(window.CMS.session.getApiBase())}</p></div>`,
             '<label class="search-shell">',
             '<i class="bi bi-search"></i>',
             '<input type="search" placeholder="Search complaints, departments, employees..." data-global-search>',
             "</label>",
-            '<div class="topbar-user">',
-            `<div class="avatar">${getInitials(user.name)}</div>`,
-            `<div><strong>${escapeHtml(user.name || "Guest User")}</strong><p>${escapeHtml(user.role || "")}</p></div>`,
+            '<div class="topbar-user-menu" data-user-menu>',
+            `<button type="button" class="avatar-btn"><div class="avatar">${getInitials(user.name)}</div></button>`,
+            '<div class="user-dropdown">',
+            '<div class="dropdown-header">',
+            `<strong>${escapeHtml(user.name || "Guest User")}</strong>`,
+            `<p>${escapeHtml(user.role || currentRole)}</p>`,
+            '</div>',
+            `<a class="dropdown-item" href="${profileLink}"><i class="bi bi-person"></i> Profile</a>`,
+            '<button class="dropdown-item text-danger" type="button" data-logout><i class="bi bi-box-arrow-left"></i> Logout</button>',
+            '</div>',
             "</div>"
         ].join("");
     }
@@ -245,6 +247,20 @@
         if (menuToggle && sidebar) {
             menuToggle.addEventListener("click", function () {
                 sidebar.classList.toggle("open");
+            });
+        }
+
+        const userMenu = qs("[data-user-menu]");
+        if (userMenu) {
+            const btn = userMenu.querySelector(".avatar-btn");
+            btn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                userMenu.classList.toggle("open");
+            });
+            document.addEventListener("click", function(e) {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove("open");
+                }
             });
         }
 

@@ -25,36 +25,36 @@
                 <section class="page-title">
                     <span class="eyebrow">System Overview</span>
                     <h1>Welcome back, Admin.</h1>
-                    <p>Monitor complaint flow, staffing, and department performance from one clear command center.</p>
+                    <!-- <p>Monitor complaint flow, staffing, and department performance from one clear command center.</p> -->
                 </section>
                 <section class="card-grid" id="adminStatCards"></section>
-                <section class="chart-pair">
+                <section class="horizontal-charts">
                     <article class="panel-card chart-panel">
-                        <div class="section-head"><div><h2>Complaint Status</h2><p>Live distribution by status from the dashboard API.</p></div></div>
+                        <div class="section-head"><div><h2>Complaint Status</h2></div></div>
                         <div class="chart-canvas-wrap"><canvas id="adminStatusChart"></canvas></div>
                     </article>
                     <article class="panel-card chart-panel">
-                        <div class="section-head"><div><h2>Priority Split</h2><p>Current complaint priority mix.</p></div></div>
+                        <div class="section-head"><div><h2>Priority Split</h2></div></div>
                         <div class="chart-canvas-wrap"><canvas id="adminPriorityChart"></canvas></div>
                     </article>
-                </section>
-                <section class="analytics-grid">
                     <article class="panel-card chart-panel">
-                        <div class="section-head"><div><h2>Department Distribution</h2><p>Complaint volume across departments.</p></div></div>
+                        <div class="section-head"><div><h2>Department Distribution</h2></div></div>
                         <div class="chart-canvas-wrap"><canvas id="adminDepartmentChart"></canvas></div>
                     </article>
+                </section>
+                <section class="two-column">
                     <article class="panel-card">
-                        <div class="section-head"><div><h2>Quick Actions</h2><p>Move quickly between admin workflows.</p></div></div>
+                        <div class="section-head"><div><h2>Recent Complaints</h2></div></div>
+                        <div class="list-stack" id="adminRecentComplaints"></div>
+                    </article>
+                    <article class="panel-card">
+                        <div class="section-head"><div><h2>Quick Actions</h2></div></div>
                         <div class="quick-actions">
-                            <a class="quick-action" href="complaints.html"><i class="bi bi-person-workspace"></i><div><strong>Assign Complaints</strong><p>Map complaints to employees.</p></div></a>
-                            <a class="quick-action" href="departments.html"><i class="bi bi-diagram-3"></i><div><strong>Departments</strong><p>Create and maintain departments.</p></div></a>
-                            <a class="quick-action" href="employees.html"><i class="bi bi-people"></i><div><strong>Employees</strong><p>Onboard and manage employees.</p></div></a>
+                            <a class="quick-action" href="complaints.html"><i class="bi bi-person-workspace"></i><div><strong>Assign Complaints</strong></div></a>
+                            <a class="quick-action" href="departments.html"><i class="bi bi-diagram-3"></i><div><strong>Departments</strong></div></a>
+                            <a class="quick-action" href="employees.html"><i class="bi bi-people"></i><div><strong>Employees</strong></div></a>
                         </div>
                     </article>
-                </section>
-                <section class="panel-card">
-                    <div class="section-head"><div><h2>Recent Complaints</h2><p>Newest complaints coming into the system.</p></div></div>
-                    <div class="list-stack" id="adminRecentComplaints"></div>
                 </section>
             </main>
         </div>
@@ -65,5 +65,6 @@
     <script src="../../assets/js/authGuard.js"></script>
     <script src="../../assets/js/realtime.js"></script>
     <script src="../../assets/js/dashboard.js"></script>
+    <script src="../../assets/js/scrollHijack.js"></script>
 </body>
 </html>

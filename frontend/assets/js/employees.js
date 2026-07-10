@@ -19,23 +19,29 @@
 
         await fillDepartmentOptions(form.department, form.department.value);
         const employees = (await api.getEmployees()).data || [];
-        table.innerHTML = employees.length ? [
-            '<div class="table-shell"><table class="data-table"><thead><tr>',
-            "<th>Employee</th><th>Email</th><th>Department</th><th>Phone</th><th>Actions</th>",
-            "</tr></thead><tbody>",
-            employees.map(function (employee) {
-                return [
-                    "<tr>",
-                    `<td><div class="inline-meta"><strong>${utils.escapeHtml(employee.name)}</strong><small>${utils.formatDate(employee.createdAt)}</small></div></td>`,
-                    `<td>${utils.escapeHtml(employee.email)}</td>`,
-                    `<td>${utils.escapeHtml(employee.department && employee.department.name ? employee.department.name : "No department")}</td>`,
-                    `<td>${utils.escapeHtml(employee.phone || "No phone")}</td>`,
-                    `<td><div class="table-actions"><button class="btn btn-secondary" data-edit-id="${employee._id}">Edit</button><button class="btn btn-ghost" data-delete-id="${employee._id}">Delete</button></div></td>`,
-                    "</tr>"
-                ].join("");
-            }).join(""),
-            "</tbody></table></div>"
-        ].join("") : utils.createEmptyState("bi-people", "No employees yet", "Add employees so complaints can be assigned.");
+        table.innerHTML = employees.length ? '<div class="employee-tiles">' + employees.map(function (employee) {
+            var dept = employee.department && employee.department.name ? employee.department.name : "No department";
+            return [
+                '<div class="employee-tile">',
+                '<div class="employee-tile-header">',
+                '<div class="employee-tile-avatar">' + utils.getInitials(employee.name) + '</div>',
+                '<div class="employee-tile-info">',
+                '<strong>' + utils.escapeHtml(employee.name) + '</strong>',
+                '<span>' + utils.escapeHtml(dept) + '</span>',
+                '</div>',
+                '</div>',
+                '<div class="employee-tile-details">',
+                '<div class="employee-tile-row"><i class="bi bi-envelope"></i><span>' + utils.escapeHtml(employee.email) + '</span></div>',
+                '<div class="employee-tile-row"><i class="bi bi-phone"></i><span>' + utils.escapeHtml(employee.phone || "—") + '</span></div>',
+                '<div class="employee-tile-row"><i class="bi bi-calendar3"></i><span>' + utils.formatDate(employee.createdAt) + '</span></div>',
+                '</div>',
+                '<div class="employee-tile-actions">',
+                '<button class="btn btn-secondary btn-sm" data-edit-id="' + employee._id + '">Edit</button>',
+                '<button class="btn btn-ghost btn-sm" data-delete-id="' + employee._id + '">Delete</button>',
+                '</div>',
+                '</div>'
+            ].join("");
+        }).join("") + '</div>' : utils.createEmptyState("bi-people", "No employees yet", "Add employees so complaints can be assigned.");
 
         table.onclick = async function (event) {
             const editId = event.target.getAttribute("data-edit-id");

@@ -10,17 +10,26 @@
         }
 
         const departments = (await api.getDepartments()).data || [];
-        list.innerHTML = departments.length ? departments.map(function (department) {
+        list.innerHTML = departments.length ? '<div class="department-tiles">' + departments.map(function (department) {
             return [
-                '<article class="panel-card stack">',
-                `<div class="split"><div><h3>${utils.escapeHtml(department.name)}</h3><p>${utils.escapeHtml(department.description || "No description added yet.")}</p></div>`,
-                `<span class="chip">${utils.formatDate(department.createdAt)}</span></div>`,
-                '<div class="action-row">',
-                `<button class="btn btn-secondary" data-edit-id="${department._id}">Edit</button>`,
-                `<button class="btn btn-ghost" data-delete-id="${department._id}">Delete</button>`,
-                "</div></article>"
+                '<article class="department-tile">',
+                '<div class="department-tile-header">',
+                '<div class="department-tile-avatar">' + utils.getInitials(department.name) + '</div>',
+                '<div class="department-tile-info">',
+                '<strong>' + utils.escapeHtml(department.name) + '</strong>',
+                '<span>' + utils.escapeHtml(department.description || "No description added yet.") + '</span>',
+                '</div>',
+                '</div>',
+                '<div class="department-tile-details">',
+                '<div class="department-tile-row"><i class="bi bi-calendar3"></i><span>' + utils.formatDate(department.createdAt) + '</span></div>',
+                '</div>',
+                '<div class="department-tile-actions">',
+                '<button class="btn btn-secondary" data-edit-id="' + department._id + '">Edit</button>',
+                '<button class="btn btn-ghost" data-delete-id="' + department._id + '">Delete</button>',
+                '</div>',
+                '</article>'
             ].join("");
-        }).join("") : utils.createEmptyState("bi-diagram-3", "No departments yet", "Create the first department to structure complaints.");
+        }).join("") + '</div>' : utils.createEmptyState("bi-diagram-3", "No departments yet", "Create the first department to structure complaints.");
 
         list.onclick = async function (event) {
             const editId = event.target.getAttribute("data-edit-id");
