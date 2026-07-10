@@ -27,7 +27,34 @@
                     <h1>Complaints</h1>
                 </section>
                 <section class="panel-card">
-                    <div class="section-head"><div><h2>All Complaints</h2></div></div>
+                    <div class="section-head">
+                        <div><h2>All Complaints</h2></div>
+                        <button class="btn btn-secondary filter-toggle-btn" id="filterToggleBtn">
+                            <i class="bi bi-funnel"></i> Filter
+                        </button>
+                    </div>
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="filter-panel-inner">
+                            <div class="filter-group">
+                                <span class="filter-group-label">Status</span>
+                                <div class="filter-chips" id="statusFilterChips">
+                                    <button class="filter-chip active" data-status="all">All</button>
+                                    <button class="filter-chip" data-status="Pending">
+                                        <span class="filter-dot dot-pending"></span> Pending
+                                    </button>
+                                    <button class="filter-chip" data-status="Assigned">
+                                        <span class="filter-dot dot-assigned"></span> Assigned
+                                    </button>
+                                    <button class="filter-chip" data-status="In Progress">
+                                        <span class="filter-dot dot-progress"></span> In Progress
+                                    </button>
+                                    <button class="filter-chip" data-status="Resolved">
+                                        <span class="filter-dot dot-resolved"></span> Resolved
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="adminComplaintsTable"></div>
                 </section>
             </main>

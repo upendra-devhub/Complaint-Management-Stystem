@@ -3,12 +3,15 @@
     const utils = window.CMS.utils;
     const realtime = window.CMS.realtime;
 
+    const ITEMS_PER_PAGE = 5;
+
     const tableState = {
         myComplaints: {
             role: "user",
             items: [],
             query: "",
             bound: false,
+            currentPage: 1,
             containerId: "myComplaintsTable"
         },
         adminComplaints: {
@@ -17,6 +20,8 @@
             employees: [],
             query: "",
             bound: false,
+            currentPage: 1,
+            statusFilter: "all",
             containerId: "adminComplaintsTable"
         },
         employeeAssigned: {
@@ -24,40 +29,157 @@
             items: [],
             query: "",
             bound: false,
+            currentPage: 1,
             containerId: "employeeAssignedTable"
         }
     };
 
+    function statusIcon(status) {
+        var map = {
+            'Pending': 'bi-clock',
+            'Assigned': 'bi-person-check',
+            'In Progress': 'bi-gear-wide-connected',
+            'Resolved': 'bi-check-circle'
+        };
+        return map[status] || 'bi-circle';
+    }
+
     function complaintRow(complaint, role) {
         const detailsHref = window.CMS.session.resolve(`pages/user/details.html?id=${complaint._id}`);
-        const assignButton = role === "admin" ? `<button class="btn btn-secondary" data-assign-id="${complaint._id}">Assign</button>` : "";
-        const statusButton = role === "employee" ? `<button class="btn btn-secondary" data-update-id="${complaint._id}">Update</button>` : "";
+        const assignButton = role === "admin" ? `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>` : "";
+        const statusButton = role === "employee" ? `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>` : "";
+        const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
+        const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
+        const statusCls = utils.statusClass(complaint.status);
+
         return [
-            "<tr>",
-            `<td><div class="inline-meta"><strong>${utils.escapeHtml(complaint.complaintId)}</strong><small>${utils.formatDate(complaint.createdAt)}</small></div></td>`,
-            `<td><div class="inline-meta"><strong>${utils.escapeHtml(complaint.title)}</strong><small>${utils.escapeHtml(complaint.location)}</small></div></td>`,
-            `<td>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</td>`,
-            `<td><span class="badge ${utils.statusClass(complaint.status)}">${utils.escapeHtml(complaint.status)}</span></td>`,
-            `<td>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned")}</td>`,
-            `<td><div class="table-actions"><a class="btn btn-ghost" href="${detailsHref}">View</a>${assignButton}${statusButton}</div></td>`,
-            "</tr>"
+            '<div class="complaint-row">',
+            `  <div class="cc-icon"><div class="complaint-avatar ${statusCls}"><i class="bi ${statusIcon(complaint.status)}"></i></div></div>`,
+            '  <div class="cc-info">',
+            `    <span class="complaint-title">${utils.escapeHtml(complaint.title)}</span>`,
+            '    <div class="complaint-meta-line">',
+            `      <span class="complaint-id"><i class="bi bi-hash"></i>${utils.escapeHtml(complaint.complaintId)}</span>`,
+            '      <span class="complaint-sep">·</span>',
+            `      <span class="complaint-date"><i class="bi bi-calendar3"></i>${utils.formatDate(complaint.createdAt)}</span>`,
+            '      <span class="complaint-sep">·</span>',
+            `      <span class="complaint-location"><i class="bi bi-geo-alt"></i>${utils.escapeHtml(complaint.location)}</span>`,
+            '    </div>',
+            '  </div>',
+            `  <div class="cc-dept"><span class="complaint-dept"><i class="bi bi-building"></i>${utils.escapeHtml(departmentName)}</span></div>`,
+            `  <div class="cc-status"><span class="status-pill ${statusCls}"><i class="bi ${statusIcon(complaint.status)}"></i>${utils.escapeHtml(complaint.status)}</span></div>`,
+            `  <div class="cc-assigned"><span class="complaint-assigned"><i class="bi bi-person"></i>${utils.escapeHtml(assignedName)}</span></div>`,
+            '  <div class="cc-actions">',
+            `    <div class="row-actions">`,
+            `      <a class="row-action-btn view-btn" href="${detailsHref}" title="View Details"><i class="bi bi-eye"></i> View</a>`,
+            `      ${assignButton}${statusButton}`,
+            '    </div>',
+            '  </div>',
+            '</div>'
         ].join("");
     }
 
-    function renderComplaintTable(container, complaints, role) {
+    function paginateItems(items, page) {
+        const totalPages = Math.max(1, Math.ceil(items.length / ITEMS_PER_PAGE));
+        const safePage = Math.max(1, Math.min(page, totalPages));
+        const start = (safePage - 1) * ITEMS_PER_PAGE;
+        return {
+            pageItems: items.slice(start, start + ITEMS_PER_PAGE),
+            currentPage: safePage,
+            totalPages: totalPages,
+            totalItems: items.length
+        };
+    }
+
+    function buildPaginationControls(paginationInfo, stateKey) {
+        if (paginationInfo.totalPages <= 1) {
+            return "";
+        }
+
+        var buttons = [];
+        buttons.push(
+            '<button class="pagination-btn' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '" data-page-action="prev" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '><i class="bi bi-chevron-left"></i></button>'
+        );
+
+        for (var i = 1; i <= paginationInfo.totalPages; i++) {
+            buttons.push(
+                '<button class="pagination-btn' + (i === paginationInfo.currentPage ? ' active' : '') + '" data-page-num="' + i + '" data-state-key="' + stateKey + '">' + i + '</button>'
+            );
+        }
+
+        buttons.push(
+            '<button class="pagination-btn' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '" data-page-action="next" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '><i class="bi bi-chevron-right"></i></button>'
+        );
+
+        return [
+            '<div class="pagination-bar">',
+            '<span class="pagination-info">Showing ' + ((paginationInfo.currentPage - 1) * ITEMS_PER_PAGE + 1) + '–' + Math.min(paginationInfo.currentPage * ITEMS_PER_PAGE, paginationInfo.totalItems) + ' of ' + paginationInfo.totalItems + '</span>',
+            '<div class="pagination-controls">' + buttons.join('') + '</div>',
+            '</div>'
+        ].join('');
+    }
+
+    function getStateKeyForContainer(containerId) {
+        for (var key in tableState) {
+            if (tableState[key].containerId === containerId) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    function handlePaginationClick(event) {
+        var target = event.target.closest('[data-state-key]');
+        if (!target) {
+            return;
+        }
+
+        var stateKey = target.getAttribute('data-state-key');
+        var state = tableState[stateKey];
+        if (!state) {
+            return;
+        }
+
+        var pageNum = target.getAttribute('data-page-num');
+        var pageAction = target.getAttribute('data-page-action');
+
+        if (pageNum) {
+            state.currentPage = parseInt(pageNum, 10);
+        } else if (pageAction === 'prev') {
+            state.currentPage = Math.max(1, state.currentPage - 1);
+        } else if (pageAction === 'next') {
+            state.currentPage = state.currentPage + 1;
+        } else {
+            return;
+        }
+
+        renderTableState(state);
+    }
+
+    function renderComplaintTable(container, complaints, role, stateKey) {
         if (!complaints.length) {
             container.innerHTML = utils.createEmptyState("bi-inbox", "No complaints found", "Try changing the filters or add new complaints.");
             return;
         }
 
+        var state = tableState[stateKey];
+        var paginationInfo = paginateItems(complaints, state.currentPage);
+        state.currentPage = paginationInfo.currentPage;
+
         container.innerHTML = [
-            '<div class="table-shell"><table class="data-table"><thead><tr>',
-            "<th>Complaint</th><th>Title</th><th>Department</th><th>Status</th><th>Assigned</th><th>Actions</th>",
-            "</tr></thead><tbody>",
-            complaints.map(function (complaint) {
+            '<div class="complaint-list">',
+            '  <div class="complaint-header">',
+            '    <div class="cc-icon"></div>',
+            '    <div class="cc-info">Complaint</div>',
+            '    <div class="cc-dept">Department</div>',
+            '    <div class="cc-status">Status</div>',
+            '    <div class="cc-assigned">Assigned To</div>',
+            '    <div class="cc-actions">Actions</div>',
+            '  </div>',
+            paginationInfo.pageItems.map(function (complaint) {
                 return complaintRow(complaint, role);
             }).join(""),
-            "</tbody></table></div>"
+            '</div>',
+            buildPaginationControls(paginationInfo, stateKey)
         ].join("");
     }
 
@@ -78,13 +200,31 @@
         });
     }
 
+    function filterByStatus(items, statusFilter) {
+        if (!statusFilter || statusFilter === "all") {
+            return items;
+        }
+        return items.filter(function (complaint) {
+            return complaint.status === statusFilter;
+        });
+    }
+
+    function applyAllFilters(state) {
+        var filtered = filterComplaints(state.items, state.query);
+        if (state.statusFilter) {
+            filtered = filterByStatus(filtered, state.statusFilter);
+        }
+        return filtered;
+    }
+
     function renderTableState(state) {
         const container = document.getElementById(state.containerId);
         if (!container) {
             return;
         }
 
-        renderComplaintTable(container, filterComplaints(state.items, state.query), state.role);
+        var stateKey = getStateKeyForContainer(state.containerId);
+        renderComplaintTable(container, applyAllFilters(state), state.role, stateKey);
     }
 
     function bindSearch(state) {
@@ -95,6 +235,7 @@
         state.bound = true;
         document.addEventListener("cms:search", function (event) {
             state.query = event.detail.query;
+            state.currentPage = 1;
             renderTableState(state);
         });
     }
@@ -391,6 +532,56 @@
 
         if (document.getElementById(tableState.employeeAssigned.containerId)) {
             subscribeToComplaintChanges(loadEmployeeAssignedPage);
+        }
+
+        document.addEventListener('click', handlePaginationClick);
+
+        /* ── Filter panel toggle + chip logic ── */
+        var filterToggleBtn = document.getElementById('filterToggleBtn');
+        var filterPanel = document.getElementById('filterPanel');
+        var statusFilterChips = document.getElementById('statusFilterChips');
+
+        if (filterToggleBtn && filterPanel) {
+            filterToggleBtn.addEventListener('click', function () {
+                var isOpen = filterPanel.classList.toggle('open');
+                filterToggleBtn.classList.toggle('active', isOpen);
+            });
+        }
+
+        if (statusFilterChips) {
+            statusFilterChips.addEventListener('click', function (event) {
+                var chip = event.target.closest('[data-status]');
+                if (!chip) {
+                    return;
+                }
+
+                var status = chip.getAttribute('data-status');
+                var state = tableState.adminComplaints;
+
+                /* Update active chip */
+                var allChips = statusFilterChips.querySelectorAll('.filter-chip');
+                allChips.forEach(function (c) { c.classList.remove('active'); });
+                chip.classList.add('active');
+
+                /* Apply filter */
+                state.statusFilter = status;
+                state.currentPage = 1;
+                renderTableState(state);
+
+                /* Update the filter button badge */
+                if (filterToggleBtn) {
+                    var existingBadge = filterToggleBtn.querySelector('.filter-count');
+                    if (status !== 'all') {
+                        if (existingBadge) {
+                            existingBadge.textContent = '1';
+                        } else {
+                            filterToggleBtn.insertAdjacentHTML('beforeend', ' <span class="filter-count">1</span>');
+                        }
+                    } else if (existingBadge) {
+                        existingBadge.remove();
+                    }
+                }
+            });
         }
     });
 })();
