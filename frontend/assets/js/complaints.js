@@ -1,6 +1,32 @@
 (function () {
     const api = window.CMS.api;
     const utils = window.CMS.utils;
+    const realtime = window.CMS.realtime;
+
+    const tableState = {
+        myComplaints: {
+            role: "user",
+            items: [],
+            query: "",
+            bound: false,
+            containerId: "myComplaintsTable"
+        },
+        adminComplaints: {
+            role: "admin",
+            items: [],
+            employees: [],
+            query: "",
+            bound: false,
+            containerId: "adminComplaintsTable"
+        },
+        employeeAssigned: {
+            role: "employee",
+            items: [],
+            query: "",
+            bound: false,
+            containerId: "employeeAssignedTable"
+        }
+    };
 
     function complaintRow(complaint, role) {
         const detailsHref = window.CMS.session.resolve(`pages/user/details.html?id=${complaint._id}`);
@@ -35,29 +61,59 @@
         ].join("");
     }
 
-    function bindSearchFilter(source, container, role) {
-        let filtered = source.slice();
-
-        function rerender() {
-            renderComplaintTable(container, filtered, role);
+    function filterComplaints(items, query) {
+        if (!query) {
+            return items;
         }
 
-        document.addEventListener("cms:search", function (event) {
-            const query = event.detail.query;
-            filtered = source.filter(function (complaint) {
-                const haystack = [
-                    complaint.complaintId,
-                    complaint.title,
-                    complaint.location,
-                    complaint.department && complaint.department.name,
-                    complaint.createdBy && complaint.createdBy.name
-                ].join(" ").toLowerCase();
-                return haystack.includes(query);
-            });
-            rerender();
+        return items.filter(function (complaint) {
+            const haystack = [
+                complaint.complaintId,
+                complaint.title,
+                complaint.location,
+                complaint.department && complaint.department.name,
+                complaint.createdBy && complaint.createdBy.name
+            ].join(" ").toLowerCase();
+            return haystack.includes(query);
         });
+    }
 
-        return rerender;
+    function renderTableState(state) {
+        const container = document.getElementById(state.containerId);
+        if (!container) {
+            return;
+        }
+
+        renderComplaintTable(container, filterComplaints(state.items, state.query), state.role);
+    }
+
+    function bindSearch(state) {
+        if (state.bound) {
+            return;
+        }
+
+        state.bound = true;
+        document.addEventListener("cms:search", function (event) {
+            state.query = event.detail.query;
+            renderTableState(state);
+        });
+    }
+
+    function subscribeToComplaintChanges(loadFn) {
+        if (!realtime) {
+            return;
+        }
+
+        let refreshTimer = null;
+
+        realtime.onComplaintChanged(function () {
+            window.clearTimeout(refreshTimer);
+            refreshTimer = window.setTimeout(function () {
+                loadFn().catch(function (error) {
+                    utils.showToast(error.message, "error");
+                });
+            }, 220);
+        });
     }
 
     async function initComplaintForm() {
@@ -118,19 +174,16 @@
         });
     }
 
-    async function initMyComplaintsPage() {
-        const container = document.getElementById("myComplaintsTable");
+    async function loadMyComplaintsPage() {
+        const state = tableState.myComplaints;
+        const container = document.getElementById(state.containerId);
         if (!container) {
             return;
         }
 
-        try {
-            const complaints = (await api.getMyComplaints()).data || [];
-            const rerender = bindSearchFilter(complaints, container, "user");
-            rerender();
-        } catch (error) {
-            utils.showToast(error.message, "error");
-        }
+        bindSearch(state);
+        state.items = (await api.getMyComplaints()).data || [];
+        renderTableState(state);
     }
 
     function buildTimeline(complaint) {
@@ -151,51 +204,53 @@
         }).join("");
     }
 
-    async function initDetailsPage() {
+    async function loadDetailsPage() {
         const complaintId = utils.readQueryParam("id");
         const container = document.getElementById("complaintDetailsRoot");
         if (!container || !complaintId) {
             return;
         }
 
-        try {
-            const complaint = (await api.getComplaintById(complaintId)).data;
-            const images = (complaint.images || []).map(function (image) {
-                return `<div class="preview-card"><img src="${image}" alt="Complaint evidence"></div>`;
-            }).join("");
+        const complaint = (await api.getComplaintById(complaintId)).data;
+        const images = (complaint.images || []).filter(Boolean).map(function (image) {
+            return `<div class="preview-card"><img src="${image}" alt="Complaint evidence"></div>`;
+        }).join("");
 
-            container.innerHTML = [
-                '<section class="panel-card stack">',
-                `<div class="page-title"><span class="eyebrow">Complaint details</span><h1>${utils.escapeHtml(complaint.title)}</h1>`,
-                `<p>${utils.escapeHtml(complaint.description)}</p></div>`,
-                '<div class="details-grid">',
-                `<div class="detail-tile"><span>Complaint ID</span><strong>${utils.escapeHtml(complaint.complaintId)}</strong></div>`,
-                `<div class="detail-tile"><span>Status</span><strong><span class="badge ${utils.statusClass(complaint.status)}">${utils.escapeHtml(complaint.status)}</span></strong></div>`,
-                `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
-                `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
-                "</div></section>",
-                '<section class="two-column">',
-                `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2><p>Each stage is sourced from backend timestamps.</p></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
-                `<div class="panel-card"><div class="section-head"><div><h2>Participants</h2></div></div><div class="stack"><div><strong>Citizen</strong><p>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</p></div><div><strong>Assigned Employee</strong><p>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</p></div><div><strong>Employee Remark</strong><p>${utils.escapeHtml(complaint.employeeRemark || "No remark added yet.")}</p></div></div></div>`,
-                "</section>",
-                `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2><p>Images uploaded while filing the complaint.</p></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
-            ].join("");
-        } catch (error) {
-            utils.showToast(error.message, "error");
-        }
+        container.innerHTML = [
+            '<section class="panel-card stack">',
+            `<div class="page-title"><span class="eyebrow">Complaint details</span><h1>${utils.escapeHtml(complaint.title)}</h1>`,
+            `<p>${utils.escapeHtml(complaint.description)}</p></div>`,
+            '<div class="details-grid">',
+            `<div class="detail-tile"><span>Complaint ID</span><strong>${utils.escapeHtml(complaint.complaintId)}</strong></div>`,
+            `<div class="detail-tile"><span>Status</span><strong><span class="badge ${utils.statusClass(complaint.status)}">${utils.escapeHtml(complaint.status)}</span></strong></div>`,
+            `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
+            `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
+            "</div></section>",
+            utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
+            '<section class="two-column">',
+            `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2><p>Each stage is sourced from backend timestamps.</p></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
+            `<div class="panel-card"><div class="section-head"><div><h2>Participants</h2></div></div><div class="stack"><div><strong>Citizen</strong><p>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</p></div><div><strong>Assigned Employee</strong><p>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</p></div><div><strong>Employee Remark</strong><p>${utils.escapeHtml(complaint.employeeRemark || "No remark added yet.")}</p></div></div></div>`,
+            "</section>",
+            `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2><p>Images uploaded while filing the complaint.</p></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
+        ].join("");
     }
 
-    async function initAdminComplaintsPage() {
-        const container = document.getElementById("adminComplaintsTable");
+    async function loadAdminComplaintsPage() {
+        const state = tableState.adminComplaints;
+        const container = document.getElementById(state.containerId);
         if (!container) {
             return;
         }
 
-        const results = await Promise.all([api.getAllComplaints(), api.getEmployees()]);
-        const complaints = results[0].data || [];
-        const employees = results[1].data || [];
-        const rerender = bindSearchFilter(complaints, container, "admin");
-        rerender();
+        bindSearch(state);
+        const results = await Promise.all([
+            api.getAllComplaints(),
+            api.getEmployees()
+        ]);
+
+        state.items = results[0].data || [];
+        state.employees = results[1].data || [];
+        renderTableState(state);
 
         container.onclick = function (event) {
             const assignId = event.target.getAttribute("data-assign-id");
@@ -203,12 +258,18 @@
                 return;
             }
 
-            const complaint = complaints.find(function (item) {
+            const complaint = state.items.find(function (item) {
                 return item._id === assignId;
             });
-            const matchingEmployees = employees.filter(function (employee) {
+
+            const matchingEmployees = state.employees.filter(function (employee) {
                 return complaint.department && employee.department && complaint.department._id === employee.department._id;
             });
+
+            if (!matchingEmployees.length) {
+                utils.showToast("No employees are available in this complaint's department yet.", "info");
+                return;
+            }
 
             utils.openModal([
                 '<div class="section-head"><div><h2>Assign Complaint</h2><p>Select an employee from the same department.</p></div>',
@@ -223,14 +284,13 @@
                 '</select></div><button type="submit" class="btn btn-primary">Assign Now</button></form>'
             ].join(""));
 
-            const modalForm = document.getElementById("assignComplaintForm");
-            modalForm.addEventListener("submit", async function (submitEvent) {
+            document.getElementById("assignComplaintForm").addEventListener("submit", async function (submitEvent) {
                 submitEvent.preventDefault();
                 try {
-                    await api.assignComplaint(assignId, modalForm.employeeId.value);
+                    await api.assignComplaint(assignId, submitEvent.target.employeeId.value);
                     utils.closeModal();
                     utils.showToast("Complaint assigned successfully.", "success");
-                    window.location.reload();
+                    await loadAdminComplaintsPage();
                 } catch (error) {
                     utils.showToast(error.message, "error");
                 }
@@ -248,15 +308,16 @@
         return "";
     }
 
-    async function initEmployeeAssignedPage() {
-        const container = document.getElementById("employeeAssignedTable");
+    async function loadEmployeeAssignedPage() {
+        const state = tableState.employeeAssigned;
+        const container = document.getElementById(state.containerId);
         if (!container) {
             return;
         }
 
-        const complaints = (await api.getAssignedComplaints()).data || [];
-        const rerender = bindSearchFilter(complaints, container, "employee");
-        rerender();
+        bindSearch(state);
+        state.items = (await api.getAssignedComplaints()).data || [];
+        renderTableState(state);
 
         container.onclick = function (event) {
             const updateId = event.target.getAttribute("data-update-id");
@@ -264,7 +325,7 @@
                 return;
             }
 
-            const complaint = complaints.find(function (item) {
+            const complaint = state.items.find(function (item) {
                 return item._id === updateId;
             });
             const targetStatus = nextStatus(complaint.status);
@@ -292,7 +353,7 @@
                     });
                     utils.closeModal();
                     utils.showToast("Complaint status updated.", "success");
-                    window.location.reload();
+                    await loadEmployeeAssignedPage();
                 } catch (error) {
                     utils.showToast(error.message, "error");
                 }
@@ -302,13 +363,34 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         initComplaintForm();
-        initMyComplaintsPage();
-        initDetailsPage();
-        initAdminComplaintsPage().catch(function (error) {
-            utils.showToast(error.message, "error");
+
+        loadMyComplaintsPage().catch(function () {
+            return null;
         });
-        initEmployeeAssignedPage().catch(function (error) {
-            utils.showToast(error.message, "error");
+        loadDetailsPage().catch(function () {
+            return null;
         });
+        loadAdminComplaintsPage().catch(function () {
+            return null;
+        });
+        loadEmployeeAssignedPage().catch(function () {
+            return null;
+        });
+
+        if (document.getElementById(tableState.myComplaints.containerId)) {
+            subscribeToComplaintChanges(loadMyComplaintsPage);
+        }
+
+        if (document.getElementById("complaintDetailsRoot")) {
+            subscribeToComplaintChanges(loadDetailsPage);
+        }
+
+        if (document.getElementById(tableState.adminComplaints.containerId)) {
+            subscribeToComplaintChanges(loadAdminComplaintsPage);
+        }
+
+        if (document.getElementById(tableState.employeeAssigned.containerId)) {
+            subscribeToComplaintChanges(loadEmployeeAssignedPage);
+        }
     });
 })();

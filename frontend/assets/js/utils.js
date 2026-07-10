@@ -84,7 +84,7 @@
     }
 
     function escapeHtml(value) {
-        return String(value || "")
+        return String(value == null ? "" : value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
@@ -311,12 +311,135 @@
         ].join("");
     }
 
+    function getComplaintStages() {
+        return [
+            {
+                key: "Pending",
+                icon: "bi-hourglass-split",
+                note: "Waiting for admin review"
+            },
+            {
+                key: "Assigned",
+                icon: "bi-person-workspace",
+                note: "Employee has been mapped"
+            },
+            {
+                key: "In Progress",
+                icon: "bi-tools",
+                note: "Team is actively working"
+            },
+            {
+                key: "Resolved",
+                icon: "bi-check2-circle",
+                note: "Complaint has been closed"
+            }
+        ];
+    }
+
+    function getComplaintStageIndex(status) {
+        const stages = getComplaintStages();
+        const matchIndex = stages.findIndex(function (stage) {
+            return stage.key === status;
+        });
+
+        return matchIndex === -1 ? 0 : matchIndex;
+    }
+
+    function complaintStatusMessage(complaint) {
+        if (complaint.status === "Pending") {
+            return "Your complaint is logged and waiting for assignment.";
+        }
+
+        if (complaint.status === "Assigned") {
+            if (complaint.assignedTo && complaint.assignedTo.name) {
+                return `Assigned to ${complaint.assignedTo.name}. Work should begin shortly.`;
+            }
+
+            return "An employee has been assigned and will begin shortly.";
+        }
+
+        if (complaint.status === "In Progress") {
+            if (complaint.employeeRemark) {
+                return complaint.employeeRemark;
+            }
+
+            return "The assigned team is actively working on your complaint.";
+        }
+
+        if (complaint.status === "Resolved") {
+            if (complaint.employeeRemark) {
+                return complaint.employeeRemark;
+            }
+
+            return "The complaint has been marked resolved by the team.";
+        }
+
+        return "Live updates will appear here as the complaint moves forward.";
+    }
+
+    function renderStatusTracker(complaint, options) {
+        const config = options || {};
+        const stages = getComplaintStages();
+        const currentIndex = getComplaintStageIndex(complaint.status);
+        const progressWidth = stages.length > 1
+            ? (currentIndex / (stages.length - 1)) * 100
+            : 0;
+        const liveText = config.liveLabel || "Live status";
+        const message = complaintStatusMessage(complaint);
+        const lastUpdated = complaint.updatedAt || complaint.resolvedAt || complaint.inProgressAt || complaint.assignedAt || complaint.createdAt;
+
+        return [
+            `<section class="status-tracker ${config.compact ? "compact" : ""}">`,
+            '<div class="status-tracker-head">',
+            '<div>',
+            `<span class="eyebrow"><span class="live-dot"></span>${escapeHtml(liveText)}</span>`,
+            `<h3>${escapeHtml(complaint.title || complaint.complaintId || "Complaint tracking")}</h3>`,
+            `<p>${escapeHtml(message)}</p>`,
+            "</div>",
+            `<span class="badge ${statusClass(complaint.status)}">${escapeHtml(complaint.status || "Pending")}</span>`,
+            "</div>",
+            '<div class="status-progress">',
+            '<div class="status-track-line"></div>',
+            `<div class="status-track-fill" style="width: ${progressWidth}%;"></div>`,
+            '<div class="status-steps">',
+            stages.map(function (stage, index) {
+                const stateClass = index < currentIndex
+                    ? "complete"
+                    : index === currentIndex
+                        ? "active"
+                        : "upcoming";
+
+                return [
+                    `<div class="status-step ${stateClass}">`,
+                    `<div class="status-step-icon"><i class="bi ${stage.icon}"></i></div>`,
+                    '<div class="status-step-copy">',
+                    `<strong>${escapeHtml(stage.key)}</strong>`,
+                    `<span>${escapeHtml(stage.note)}</span>`,
+                    "</div>",
+                    "</div>"
+                ].join("");
+            }).join(""),
+            "</div></div>",
+            '<div class="status-tracker-meta">',
+            `<span><strong>ID:</strong> ${escapeHtml(complaint.complaintId || "Not available")}</span>`,
+            `<span><strong>Updated:</strong> ${escapeHtml(relativeTime(lastUpdated))}</span>`,
+            `<span><strong>Department:</strong> ${escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "Not set")}</span>`,
+            "</div>",
+            "</section>"
+        ].join("");
+    }
+
     function mountChart(canvas, config) {
         if (!canvas || typeof window.Chart === "undefined") {
             return null;
         }
 
-        return new window.Chart(canvas, config);
+        if (canvas._cmsChartInstance) {
+            canvas._cmsChartInstance.destroy();
+        }
+
+        canvas._cmsChartInstance = new window.Chart(canvas, config);
+        return canvas._cmsChartInstance;
     }
 
     function openModal(contentHtml) {
@@ -357,6 +480,8 @@
         initProtectedLayout: initProtectedLayout,
         statCard: statCard,
         complaintCard: complaintCard,
+        getComplaintStageIndex: getComplaintStageIndex,
+        renderStatusTracker: renderStatusTracker,
         mountChart: mountChart,
         openModal: openModal,
         closeModal: closeModal,

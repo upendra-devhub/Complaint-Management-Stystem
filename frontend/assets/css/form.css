@@ -66,6 +66,16 @@
     left: auto;
     right: 16px;
     cursor: pointer;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Hide toggle when input is empty */
+.field-control:placeholder-shown + .toggle-password {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .checkbox-row {

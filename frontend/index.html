@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to the Complaint Management System to report issues, track progress, and stay aligned.">
     <title>Complaint Management System | Login</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/auth.css">
@@ -10,35 +11,33 @@
 </head>
 <body class="auth-body">
     <div id="toast-root"></div>
-    <main class="auth-shell">
-        <section class="auth-hero" style="--auth-bg:url('assets/images/auth-login-bg.png')">
+    <main class="auth-shell" >
+        <section class="auth-hero" style="--auth-bg:url('../../assets/images/auth-login-bg.png')">
             <div class="auth-brand">
                 <div class="brand-mark"><i class="bi bi-shield-check"></i></div>
-                <div class="brand-copy"><strong>Complaint</strong><span>Management System</span></div>
+                <div class="brand-copy"><strong>Complaint</strong> <span class="muted">Management System</span></div>
             </div>
+            
+            <div class="auth-illustration">
+                <div class="glass-orb orb-1"></div>
+                <div class="glass-orb orb-2"></div>
+                <div class="glass-card floating-stat">
+                    <div class="icon-box"><i class="bi bi-megaphone"></i></div>
+                    <div class="stat-text">
+                        <h4>Your Voice Matters</h4>
+                        <p>Turning complaints into quick action</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="auth-hero-content">
                 <span class="eyebrow">Welcome Back</span>
                 <h1>Let's make our community better together.</h1>
                 <p>A smart platform to report issues, track complaint progress, and keep every stakeholder aligned.</p>
             </div>
-            <div class="auth-highlights">
-                <article class="auth-highlight">
-                    <i class="bi bi-clipboard-check"></i>
-                    <div><strong>Easy Reporting</strong><p>Submit issues in a few clear steps with evidence attachments.</p></div>
-                </article>
-                <article class="auth-highlight">
-                    <i class="bi bi-broadcast"></i>
-                    <div><strong>Real-time Updates</strong><p>Stay informed from complaint creation through final resolution.</p></div>
-                </article>
-                <article class="auth-highlight">
-                    <i class="bi bi-shield-lock"></i>
-                    <div><strong>Secure Access</strong><p>JWT powered role-based access for citizens, employees, and admins.</p></div>
-                </article>
-            </div>
         </section>
         <section class="auth-panel">
-            <div class="auth-panel-inner">
-                <div class="auth-icon"><i class="bi bi-lock"></i></div>
+            <div class="auth-panel-inner login-panel">
                 <div class="auth-header">
                     <h2>Login to your account</h2>
                     <p>Please enter your credentials to continue.</p>
@@ -48,15 +47,15 @@
                         <label for="email">Email Address</label>
                         <div class="field-addon">
                             <i class="bi bi-envelope"></i>
-                            <input class="field-control" id="email" name="email" type="email" placeholder="Enter your email" required>
+                            <input class="field-control" id="email" name="email" type="email" placeholder="Enter your email" autocomplete="email" required>
                         </div>
                     </div>
                     <div class="form-field">
                         <label for="password">Password</label>
                         <div class="field-addon">
                             <i class="bi bi-lock"></i>
-                            <input class="field-control" id="password" name="password" type="password" placeholder="Enter your password" required>
-                            <i class="bi bi-eye-slash toggle-password" data-target="password"></i>
+                            <input class="field-control" id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+                            <i class="bi bi-eye-slash toggle-password" data-target="password" role="button" tabindex="0" aria-label="Toggle password visibility"></i>
                         </div>
                     </div>
                     <div class="checkbox-row">
@@ -67,9 +66,9 @@
                 </form>
                 <div class="auth-divider">or continue with</div>
                 <div class="social-row">
-                    <button class="social-chip google" type="button"><i class="bi bi-google"></i></button>
-                    <button class="social-chip microsoft" type="button"><i class="bi bi-microsoft"></i></button>
-                    <button class="social-chip apple" type="button"><i class="bi bi-apple"></i></button>
+                    <button class="social-chip google" type="button" aria-label="Login with Google"><i class="bi bi-google"></i></button>
+                    <button class="social-chip microsoft" type="button" aria-label="Login with Microsoft"><i class="bi bi-microsoft"></i></button>
+                    <button class="social-chip apple" type="button" aria-label="Login with Apple"><i class="bi bi-apple"></i></button>
                 </div>
                 <div class="auth-links">
                     <p>Don't have an account? <a href="pages/auth/register.html">Register</a></p>

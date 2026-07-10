@@ -20,6 +20,10 @@
         return localStorage.getItem(STORAGE_KEYS.apiBase) || "http://localhost:5000/api/v1";
     }
 
+    function getSocketBase() {
+        return getApiBase().replace(/\/api\/v1\/?$/, "");
+    }
+
     function getToken() {
         return localStorage.getItem(STORAGE_KEYS.token) || "";
     }
@@ -204,6 +208,7 @@
     window.CMS.api = api;
     window.CMS.session = {
         getApiBase: getApiBase,
+        getSocketBase: getSocketBase,
         getToken: getToken,
         getUser: getUser,
         setSession: setSession,

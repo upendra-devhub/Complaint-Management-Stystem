@@ -7,6 +7,7 @@ const Complaint=require('../models/Complaint');
 const Department=require('../models/Department');
 
 const User=require('../models/User')
+const { emitComplaintChanged } = require("../socket/realtime");
 
 const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
 
@@ -43,7 +44,25 @@ const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
         priority:'Medium',
         status:"Pending"
     });
-    return complaint;
+
+    const populatedComplaint = await complaint.populate([
+        {
+            path: "department",
+            select: "name"
+        },
+        {
+            path: "createdBy",
+            select: "name email phone"
+        },
+        {
+            path: "assignedTo",
+            select: "name email phone"
+        }
+    ]);
+
+    emitComplaintChanged("created", populatedComplaint);
+
+    return populatedComplaint;
 }
 
 const getMyComplaintsService=async(userId)=>{
@@ -130,6 +149,10 @@ const assignComplaintService = async (complaintId, employeeId) => {
         throw new Error("Selected user is not an employee");
     }
 
+    if (!employee.department) {
+        throw new Error("Selected employee is not assigned to any department.");
+    }
+
     // Ensure employee belongs to the same department
     if (employee.department.toString() !== complaint.department.toString()) {
         throw new Error(
@@ -144,7 +167,7 @@ const assignComplaintService = async (complaintId, employeeId) => {
 
     await complaint.save();
 
-    return complaint.populate([
+    const populatedComplaint = await complaint.populate([
         {
             path: "department",
             select: "name"
@@ -158,6 +181,10 @@ const assignComplaintService = async (complaintId, employeeId) => {
             select: "name email"
         }
     ]);
+
+    emitComplaintChanged("assigned", populatedComplaint);
+
+    return populatedComplaint;
 };
  //get assigned complaints
 
@@ -253,7 +280,7 @@ const updateComplaintStatusService = async (
 
     await complaint.save();
 
-    return complaint.populate([
+    const populatedComplaint = await complaint.populate([
         {
             path: "department",
             select: "name"
@@ -267,6 +294,10 @@ const updateComplaintStatusService = async (
             select: "name email"
         }
     ]);
+
+    emitComplaintChanged("updated", populatedComplaint);
+
+    return populatedComplaint;
 };
 
 

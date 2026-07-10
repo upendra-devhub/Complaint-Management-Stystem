@@ -1,6 +1,11 @@
 (function () {
     const api = window.CMS.api;
     const utils = window.CMS.utils;
+    const realtime = window.CMS.realtime;
+    const userDashboardState = {
+        complaints: [],
+        trackedComplaintId: ""
+    };
 
     function renderComplaintList(container, complaints, emptyTitle) {
         if (!container) {
@@ -67,7 +72,11 @@
             },
             options: {
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         });
     }
@@ -147,7 +156,37 @@
             .join("");
     }
 
+    function renderTrackedComplaintResult() {
+        const trackerResult = document.getElementById("complaintTrackerResult");
+        if (!trackerResult) {
+            return;
+        }
+
+        if (!userDashboardState.trackedComplaintId) {
+            trackerResult.innerHTML = '<p class="helper-text">Enter your complaint ID above to follow each stage live.</p>';
+            return;
+        }
+
+        const match = userDashboardState.complaints.find(function (complaint) {
+            return complaint._id === userDashboardState.trackedComplaintId;
+        });
+
+        if (!match) {
+            trackerResult.innerHTML = '<p class="helper-text">That complaint is no longer available in your account.</p>';
+            return;
+        }
+
+        trackerResult.innerHTML = [
+            utils.renderStatusTracker(match, {
+                compact: true,
+                liveLabel: "Live tracker"
+            }),
+            `<div class="action-row"><a class="btn btn-secondary" href="${window.CMS.session.resolve(`pages/user/details.html?id=${match._id}`)}">Open full details</a></div>`
+        ].join("");
+    }
+
     function renderUserDashboard(dashboard, complaints) {
+        userDashboardState.complaints = complaints;
         document.getElementById("userStatCards").innerHTML = [
             utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", dashboard.cards.totalComplaints, "All complaints you have raised"),
             utils.statCard("kpi-orange", "bi-hourglass-split", "Pending", dashboard.cards.pending, "Waiting for admin assignment"),
@@ -164,7 +203,7 @@
         const tracker = document.getElementById("complaintTrackerForm");
         const trackerResult = document.getElementById("complaintTrackerResult");
 
-        tracker.addEventListener("submit", function (event) {
+        tracker.onsubmit = function (event) {
             event.preventDefault();
             const value = tracker.complaintId.value.trim().toLowerCase();
             const match = complaints.find(function (complaint) {
@@ -172,45 +211,76 @@
             });
 
             if (!match) {
+                userDashboardState.trackedComplaintId = "";
                 trackerResult.innerHTML = '<p class="helper-text">No complaint matched that complaint ID in your account.</p>';
                 return;
             }
 
-            trackerResult.innerHTML = [
-                `<h4>${utils.escapeHtml(match.title)}</h4>`,
-                `<p>Status: <span class="badge ${utils.statusClass(match.status)}">${utils.escapeHtml(match.status)}</span></p>`,
-                `<p>Department: ${utils.escapeHtml(match.department && match.department.name ? match.department.name : "Not set")}</p>`,
-                `<a class="btn btn-secondary" href="${window.CMS.session.resolve(`pages/user/details.html?id=${match._id}`)}">Open details</a>`
-            ].join("");
+            userDashboardState.trackedComplaintId = match._id;
+            renderTrackedComplaintResult();
+        };
+
+        renderTrackedComplaintResult();
+    }
+
+    async function loadAdminDashboard() {
+        const response = await api.getDashboard("admin");
+        renderAdminDashboard(response.data);
+    }
+
+    async function loadEmployeeDashboard() {
+        const results = await Promise.all([
+            api.getDashboard("employee"),
+            api.getAssignedComplaints()
+        ]);
+        renderEmployeeDashboard(results[0].data, results[1].data || []);
+    }
+
+    async function loadUserDashboard() {
+        const results = await Promise.all([
+            api.getDashboard("user"),
+            api.getMyComplaints()
+        ]);
+        renderUserDashboard(results[0].data, results[1].data || []);
+    }
+
+    function subscribeToRealtime(loadFn) {
+        if (!realtime) {
+            return;
+        }
+
+        let refreshTimer = null;
+
+        realtime.onComplaintChanged(function () {
+            window.clearTimeout(refreshTimer);
+            refreshTimer = window.setTimeout(function () {
+                loadFn().catch(function (error) {
+                    utils.showToast(error.message, "error");
+                });
+            }, 220);
         });
     }
 
     document.addEventListener("DOMContentLoaded", async function () {
         const page = document.body.dataset.page;
-        if (!page) {
+        if (page !== "dashboard") {
             return;
         }
 
         try {
-            if (page === "dashboard" && document.body.dataset.role === "admin") {
-                const response = await api.getDashboard("admin");
-                renderAdminDashboard(response.data);
+            if (document.body.dataset.role === "admin") {
+                await loadAdminDashboard();
+                subscribeToRealtime(loadAdminDashboard);
             }
 
-            if (page === "dashboard" && document.body.dataset.role === "employee") {
-                const results = await Promise.all([
-                    api.getDashboard("employee"),
-                    api.getAssignedComplaints()
-                ]);
-                renderEmployeeDashboard(results[0].data, results[1].data || []);
+            if (document.body.dataset.role === "employee") {
+                await loadEmployeeDashboard();
+                subscribeToRealtime(loadEmployeeDashboard);
             }
 
-            if (page === "dashboard" && document.body.dataset.role === "user") {
-                const results = await Promise.all([
-                    api.getDashboard("user"),
-                    api.getMyComplaints()
-                ]);
-                renderUserDashboard(results[0].data, results[1].data || []);
+            if (document.body.dataset.role === "user") {
+                await loadUserDashboard();
+                subscribeToRealtime(loadUserDashboard);
             }
         } catch (error) {
             utils.showToast(error.message, "error");

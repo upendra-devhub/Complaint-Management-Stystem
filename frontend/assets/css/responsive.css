@@ -49,6 +49,23 @@
         grid-template-columns: 1fr;
     }
 
+    .status-tracker-head {
+        display: grid;
+    }
+
+    .status-tracker-meta {
+        display: grid;
+    }
+
+    .status-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .status-track-line,
+    .status-track-fill {
+        display: none;
+    }
+
     .complaint-card {
         grid-template-columns: 1fr;
     }
