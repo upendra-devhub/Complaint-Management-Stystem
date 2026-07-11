@@ -12,9 +12,24 @@ const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "https://complaint-management-stystem.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Complaint Management System API is running 🚀"
+  });
+});
 
 app.use("/api/v1/auth", authRoutes);
 app.use('/api/v1/departments',departmentRoutes);

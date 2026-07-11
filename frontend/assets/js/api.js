@@ -16,9 +16,12 @@
         return `${ROOT_PREFIX}${path}`;
     }
 
-    function getApiBase() {
-        return localStorage.getItem(STORAGE_KEYS.apiBase) || "http://localhost:5000/api/v1";
-    }
+ function getApiBase() {
+    return (
+        localStorage.getItem(STORAGE_KEYS.apiBase) ||
+        "https://cms-backend-reba.onrender.com/api/v1"
+    );
+}
 
     function getSocketBase() {
         return getApiBase().replace(/\/api\/v1\/?$/, "");
