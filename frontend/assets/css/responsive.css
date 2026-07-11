@@ -5,6 +5,37 @@
     .two-column {
         grid-template-columns: 1fr;
     }
+
+    body[data-page="employees"] .page-content,
+    body[data-page="departments"] .page-content {
+        overflow-y: auto;
+    }
+
+    body[data-page="employees"] .two-column,
+    body[data-page="departments"] .two-column {
+        flex: none;
+        min-height: auto;
+        align-items: start;
+    }
+
+    body[data-page="employees"] .two-column > .panel-card,
+    body[data-page="departments"] .two-column > .panel-card {
+        min-height: auto;
+        overflow: visible;
+    }
+
+    body[data-page="employees"] .employee-directory-card,
+    body[data-page="departments"] .department-directory-card {
+        overflow: visible;
+    }
+
+    body[data-page="employees"] .employee-directory-card #employeeTable,
+    body[data-page="departments"] .department-directory-card #departmentList {
+        min-height: auto;
+        max-height: none;
+        overflow: visible;
+        overscroll-behavior: auto;
+    }
 }
 
 @media (max-width: 980px) {
@@ -95,6 +126,11 @@
 
     .mini-item small {
         grid-column: 2;
+    }
+
+    body[data-page="employees"] .employee-tile-actions,
+    body[data-page="departments"] .department-tile-actions {
+        flex-wrap: wrap;
     }
 
     .right-note {
