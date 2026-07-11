@@ -1,4 +1,5 @@
-body[data-role="admin"] {
+body[data-role="admin"],
+body[data-page="dashboard"] {
   background:
     radial-gradient(
       circle at top right,
@@ -21,6 +22,9 @@ body {
 .app-shell {
   width: min(calc(100% - 24px), var(--layout-max));
   height: calc(100vh - 24px);
+  height: calc(100dvh - 24px);
+  min-height: calc(100vh - 24px);
+  min-height: calc(100dvh - 24px);
   margin: 12px auto;
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
@@ -54,6 +58,7 @@ body {
   gap: 24px;
   min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

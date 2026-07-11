@@ -8,8 +8,16 @@
 }
 
 @media (max-width: 980px) {
+    html,
+    body {
+        overflow: auto;
+    }
+
     .app-shell {
         grid-template-columns: 1fr;
+        height: auto;
+        min-height: calc(100vh - 24px);
+        min-height: calc(100dvh - 24px);
     }
 
     .app-sidebar {
@@ -30,6 +38,7 @@
     }
 
     .topbar {
+        grid-template-columns: auto minmax(0, 1fr) auto;
         padding-inline: 18px;
     }
 
@@ -39,6 +48,7 @@
 
     .page-content {
         padding: 20px;
+        overflow-y: visible;
     }
 }
 
@@ -70,6 +80,27 @@
         grid-template-columns: 1fr;
     }
 
+    .complaint-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .complaint-row-info {
+        width: 100%;
+    }
+
+    .complaint-row-info strong {
+        white-space: normal;
+    }
+
+    .mini-item {
+        grid-template-columns: 48px minmax(0, 1fr);
+    }
+
+    .mini-item small {
+        grid-column: 2;
+    }
+
     .right-note {
         text-align: left;
     }
@@ -84,12 +115,28 @@
         width: calc(100% - 12px);
         margin: 6px auto;
         min-height: calc(100vh - 12px);
+        min-height: calc(100dvh - 12px);
         border-radius: 24px;
+    }
+
+    .app-sidebar {
+        top: 6px;
+        left: 6px;
+        bottom: 6px;
+        width: min(320px, calc(100vw - 12px));
     }
 
     .topbar,
     .page-content {
         padding-inline: 14px;
+    }
+
+    .panel-card {
+        padding: 20px;
+    }
+
+    .horizontal-charts .chart-panel {
+        flex-basis: min(340px, calc(100vw - 40px));
     }
 
     #toast-root {
