@@ -157,6 +157,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    min-width: max-content;
 }
 
 .avatar-btn {
@@ -263,6 +264,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     font-weight: 800;
     color: var(--color-primary-strong);
     background: linear-gradient(135deg, rgba(111, 97, 255, 0.12), rgba(134, 221, 255, 0.26));

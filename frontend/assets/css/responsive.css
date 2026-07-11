@@ -8,14 +8,10 @@
 }
 
 @media (max-width: 980px) {
-    html,
-    body {
-        overflow: auto;
-    }
-
     .app-shell {
         grid-template-columns: 1fr;
-        height: auto;
+        height: calc(100vh - 24px);
+        height: calc(100dvh - 24px);
         min-height: calc(100vh - 24px);
         min-height: calc(100dvh - 24px);
     }
@@ -48,7 +44,7 @@
 
     .page-content {
         padding: 20px;
-        overflow-y: visible;
+        overflow-y: auto;
     }
 }
 
@@ -108,6 +104,14 @@
     .search-shell {
         display: none;
     }
+
+    .topbar {
+        grid-template-columns: auto 1fr auto;
+    }
+
+    .topbar-user-menu {
+        grid-column: 3;
+    }
 }
 
 @media (max-width: 560px) {
@@ -131,12 +135,38 @@
         padding-inline: 14px;
     }
 
+    .topbar {
+        gap: 10px;
+    }
+
     .panel-card {
         padding: 20px;
     }
 
     .horizontal-charts .chart-panel {
         flex-basis: min(340px, calc(100vw - 40px));
+    }
+
+    .horizontal-charts {
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body[data-page="profile"] #profileRoot > .two-column > .panel-card:first-child > .split {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    body[data-page="profile"] #profileRoot > .two-column > .panel-card:first-child > .split > .split {
+        width: 100%;
+        min-width: 0;
+    }
+
+    body[data-page="profile"] .avatar.large {
+        width: 72px;
+        height: 72px;
+        border-radius: 24px;
+        font-size: 1.45rem;
     }
 
     #toast-root {
