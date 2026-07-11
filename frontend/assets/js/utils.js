@@ -245,8 +245,25 @@
         const globalSearch = qs("[data-global-search]");
 
         if (menuToggle && sidebar) {
-            menuToggle.addEventListener("click", function () {
+            menuToggle.addEventListener("click", function (event) {
+                event.stopPropagation();
                 sidebar.classList.toggle("open");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!sidebar.classList.contains("open")) {
+                    return;
+                }
+
+                if (sidebar.contains(event.target)) {
+                    return;
+                }
+
+                if (menuToggle.contains(event.target)) {
+                    return;
+                }
+
+                sidebar.classList.remove("open");
             });
         }
 
