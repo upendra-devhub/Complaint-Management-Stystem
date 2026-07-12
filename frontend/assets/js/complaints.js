@@ -30,6 +30,7 @@
             query: "",
             bound: false,
             currentPage: 1,
+            statusFilter: "all",
             containerId: "employeeAssignedTable"
         }
     };
@@ -369,10 +370,10 @@
             "</div></section>",
             utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
             '<section class="two-column">',
-            `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2><p>Each stage is sourced from backend timestamps.</p></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
+            `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
             `<div class="panel-card"><div class="section-head"><div><h2>Participants</h2></div></div><div class="stack"><div><strong>Citizen</strong><p>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</p></div><div><strong>Assigned Employee</strong><p>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</p></div><div><strong>Employee Remark</strong><p>${utils.escapeHtml(complaint.employeeRemark || "No remark added yet.")}</p></div></div></div>`,
             "</section>",
-            `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2><p>Images uploaded while filing the complaint.</p></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
+            `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
         ].join("");
     }
 
@@ -576,6 +577,54 @@
                             existingBadge.textContent = '1';
                         } else {
                             filterToggleBtn.insertAdjacentHTML('beforeend', ' <span class="filter-count">1</span>');
+                        }
+                    } else if (existingBadge) {
+                        existingBadge.remove();
+                    }
+                }
+            });
+        }
+
+        /* ── Employee filter panel toggle + chip logic ── */
+        var empFilterToggleBtn = document.getElementById('employeeFilterToggleBtn');
+        var empFilterPanel = document.getElementById('employeeFilterPanel');
+        var empStatusFilterChips = document.getElementById('employeeStatusFilterChips');
+
+        if (empFilterToggleBtn && empFilterPanel) {
+            empFilterToggleBtn.addEventListener('click', function () {
+                var isOpen = empFilterPanel.classList.toggle('open');
+                empFilterToggleBtn.classList.toggle('active', isOpen);
+            });
+        }
+
+        if (empStatusFilterChips) {
+            empStatusFilterChips.addEventListener('click', function (event) {
+                var chip = event.target.closest('[data-status]');
+                if (!chip) {
+                    return;
+                }
+
+                var status = chip.getAttribute('data-status');
+                var state = tableState.employeeAssigned;
+
+                /* Update active chip */
+                var allChips = empStatusFilterChips.querySelectorAll('.filter-chip');
+                allChips.forEach(function (c) { c.classList.remove('active'); });
+                chip.classList.add('active');
+
+                /* Apply filter */
+                state.statusFilter = status;
+                state.currentPage = 1;
+                renderTableState(state);
+
+                /* Update the filter button badge */
+                if (empFilterToggleBtn) {
+                    var existingBadge = empFilterToggleBtn.querySelector('.filter-count');
+                    if (status !== 'all') {
+                        if (existingBadge) {
+                            existingBadge.textContent = '1';
+                        } else {
+                            empFilterToggleBtn.insertAdjacentHTML('beforeend', ' <span class="filter-count">1</span>');
                         }
                     } else if (existingBadge) {
                         existingBadge.remove();

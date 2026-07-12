@@ -24,18 +24,17 @@
             <main class="page-content">
                 <section class="page-title">
                     <span class="eyebrow">Citizen Workspace</span>
-                    <h1>Track your complaints and recent updates.</h1>
-                    <p>Everything on this dashboard is sourced from the backend, including complaint counts and recent records.</p>
+                    <h1 id="userWelcomeHeading">Welcome back.</h1>
                 </section>
                 <section class="card-grid" id="userStatCards"></section>
                 <section class="two-column">
                     <article class="panel-card">
-                        <div class="section-head"><div><h2>Recent Complaints</h2><p>Your latest complaints with current status and assignment details.</p></div></div>
+                        <div class="section-head"><div><h2>Recent Complaints</h2></div></div>
                         <div class="list-stack" id="userRecentComplaints"></div>
                     </article>
                     <div class="side-stack">
                         <article class="panel-card">
-                            <div class="section-head"><div><h2>Track Complaint</h2><p>Search within your complaints using the complaint ID.</p></div></div>
+                            <div class="section-head"><div><h2>Track Complaint</h2></div></div>
                             <form id="complaintTrackerForm" class="form-grid">
                                 <div class="form-field">
                                     <label for="complaintId">Complaint ID</label>
@@ -46,14 +45,14 @@
                             <div id="complaintTrackerResult" class="stack"></div>
                         </article>
                         <article class="panel-card">
-                            <div class="section-head"><div><h2>Quick Actions</h2><p>Jump into the most common citizen tasks.</p></div></div>
+                            <div class="section-head"><div><h2>Quick Actions</h2></div></div>
                             <div class="quick-actions">
                                 <a class="quick-action" href="complaint.html"><i class="bi bi-plus-circle"></i><div><strong>File Complaint</strong><p>Create a new complaint.</p></div></a>
                                 <a class="quick-action" href="myComplaints.html"><i class="bi bi-clipboard-check"></i><div><strong>View All</strong><p>Review all your complaints.</p></div></a>
                             </div>
                         </article>
                         <article class="panel-card">
-                            <div class="section-head"><div><h2>Recent Notifications</h2><p>Derived from your latest backend complaint activity.</p></div></div>
+                            <div class="section-head"><div><h2>Recent Notifications</h2></div></div>
                             <div class="mini-list" id="userNotifications"></div>
                         </article>
                     </div>

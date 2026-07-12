@@ -172,14 +172,14 @@
         var welcomeHeading = document.getElementById("employeeWelcomeHeading");
         if (welcomeHeading) {
             var currentUser = window.CMS.session.getUser();
-            var firstName = (currentUser && currentUser.name) ? currentUser.name.split(" ")[0] : "";
-            welcomeHeading.textContent = firstName ? "Welcome, " + firstName + "." : "Welcome back.";
+            var userName = (currentUser && currentUser.name) ? currentUser.name : "";
+            welcomeHeading.textContent = userName ? "Welcome back, " + userName + "." : "Welcome back.";
         }
 
         document.getElementById("employeeStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-check", "Assigned", dashboard.cards.assigned, "Complaints allocated to you"),
-            utils.statCard("kpi-orange", "bi-hourglass-split", "In Progress", dashboard.cards.inProgress, "Actively being worked on"),
-            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "Resolved successfully")
+            utils.statCard("kpi-purple", "bi-clipboard-check", "Assigned", dashboard.cards.assigned, ""),
+            utils.statCard("kpi-orange", "bi-hourglass-split", "In Progress", dashboard.cards.inProgress, ""),
+            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "")
         ].join("");
 
         // Limit recent complaints to 4 — full list is on the Assigned Complaints page
@@ -267,12 +267,21 @@
 
     function renderUserDashboard(dashboard, complaints) {
         userDashboardState.complaints = complaints;
+
+        // Inject user name into the welcome heading
+        var welcomeHeading = document.getElementById("userWelcomeHeading");
+        if (welcomeHeading) {
+            var currentUser = window.CMS.session.getUser();
+            var userName = (currentUser && currentUser.name) ? currentUser.name : "";
+            welcomeHeading.textContent = userName ? "Welcome back, " + userName + "." : "Welcome back.";
+        }
+
         document.getElementById("userStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", dashboard.cards.totalComplaints, "All complaints you have raised"),
-            utils.statCard("kpi-orange", "bi-hourglass-split", "Pending", dashboard.cards.pending, "Waiting for admin assignment"),
-            utils.statCard("kpi-blue", "bi-person-workspace", "Assigned", dashboard.cards.assigned, "Already mapped to an employee"),
-            utils.statCard("kpi-pink", "bi-tools", "In Progress", dashboard.cards.inProgress, "Currently being handled by the assigned team"),
-            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "Closed successfully")
+            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", dashboard.cards.totalComplaints, ""),
+            utils.statCard("kpi-orange", "bi-hourglass-split", "Pending", dashboard.cards.pending, ""),
+            utils.statCard("kpi-blue", "bi-person-workspace", "Assigned", dashboard.cards.assigned, ""),
+            utils.statCard("kpi-pink", "bi-tools", "In Progress", dashboard.cards.inProgress, ""),
+            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "")
         ].join("");
 
         renderComplaintList(document.getElementById("userRecentComplaints"), dashboard.recentComplaints || [], "No complaints filed yet");
