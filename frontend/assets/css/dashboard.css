@@ -867,3 +867,122 @@ body[data-page="employees"] #employeeTable::-webkit-scrollbar {
   padding-top: 6px;
   border-top: 1px solid rgba(126, 137, 208, 0.08);
 }
+
+/* ──────────────────────────────────────────
+   Employee Dashboard – compact / subtle
+   ────────────────────────────────────────── */
+
+body[data-role="employee"] .page-title h1 {
+  font-size: clamp(1.6rem, 2vw, 2.2rem);
+}
+
+/* Smaller stat cards */
+body[data-role="employee"] .stat-card {
+  padding: 14px 16px;
+  gap: 8px;
+  border-radius: 18px;
+}
+
+body[data-role="employee"] .stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+body[data-role="employee"] .stat-value {
+  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
+}
+
+body[data-role="employee"] .stat-label {
+  font-size: 0.85rem;
+}
+
+body[data-role="employee"] .stat-note {
+  font-size: 0.78rem;
+}
+
+body[data-role="employee"] .stat-card .chip {
+  min-height: 28px;
+  padding: 0 10px;
+  font-size: 0.78rem;
+}
+
+body[data-role="employee"] .stat-card::after {
+  width: 80px;
+  height: 80px;
+}
+
+body[data-role="employee"] .stat-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Compact chart cards in horizontal scroller */
+body[data-role="employee"] .horizontal-charts .chart-panel {
+  flex: 0 0 380px;
+  height: 320px;
+  min-height: unset;
+}
+
+body[data-role="employee"] .chart-canvas-wrap {
+  min-height: 220px;
+}
+
+body[data-role="employee"] .horizontal-charts .chart-panel .section-head {
+  margin-bottom: 12px;
+}
+
+body[data-role="employee"] .horizontal-charts .chart-panel .section-head h2 {
+  font-size: 1.05rem;
+}
+
+body[data-role="employee"] .horizontal-charts .chart-panel .section-head p {
+  font-size: 0.82rem;
+}
+
+/* Tighter complaint cards */
+body[data-role="employee"] .complaint-card {
+  padding: 16px 18px;
+  gap: 14px;
+  border-radius: 16px;
+}
+
+body[data-role="employee"] .complaint-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+}
+
+body[data-role="employee"] .complaint-card h3 {
+  font-size: 0.95rem;
+}
+
+body[data-role="employee"] .complaint-meta {
+  font-size: 0.84rem;
+  gap: 6px 10px;
+  margin-top: 5px;
+}
+
+body[data-role="employee"] .complaint-footer {
+  font-size: 0.82rem;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+/* Recent section panel */
+body[data-role="employee"] .panel-card {
+  padding: 20px;
+}
+
+body[data-role="employee"] .section-head {
+  margin-bottom: 16px;
+}
+
+body[data-role="employee"] .section-head h2 {
+  font-size: 1.08rem;
+}
+
+body[data-role="employee"] .list-stack {
+  gap: 12px;
+}

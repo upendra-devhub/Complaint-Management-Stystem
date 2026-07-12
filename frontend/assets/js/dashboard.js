@@ -168,13 +168,23 @@
     }
 
     function renderEmployeeDashboard(dashboard, assignedComplaints) {
+        // Inject employee name into the welcome heading
+        var welcomeHeading = document.getElementById("employeeWelcomeHeading");
+        if (welcomeHeading) {
+            var currentUser = window.CMS.session.getUser();
+            var firstName = (currentUser && currentUser.name) ? currentUser.name.split(" ")[0] : "";
+            welcomeHeading.textContent = firstName ? "Welcome, " + firstName + "." : "Welcome back.";
+        }
+
         document.getElementById("employeeStatCards").innerHTML = [
             utils.statCard("kpi-purple", "bi-clipboard-check", "Assigned", dashboard.cards.assigned, "Complaints allocated to you"),
             utils.statCard("kpi-orange", "bi-hourglass-split", "In Progress", dashboard.cards.inProgress, "Actively being worked on"),
             utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "Resolved successfully")
         ].join("");
 
-        renderComplaintList(document.getElementById("employeeRecentComplaints"), dashboard.recentComplaints || [], "No assignments yet");
+        // Limit recent complaints to 4 — full list is on the Assigned Complaints page
+        var recentComplaints = (dashboard.recentComplaints || []).slice(0, 4);
+        renderComplaintList(document.getElementById("employeeRecentComplaints"), recentComplaints, "No assignments yet");
 
         const priorityData = buildEmployeePriorityChart(assignedComplaints);
         utils.mountChart(document.getElementById("employeePriorityChart"), {

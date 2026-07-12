@@ -24,11 +24,10 @@
             <main class="page-content">
                 <section class="page-title">
                     <span class="eyebrow">Work Overview</span>
-                    <h1>Welcome back.</h1>
-                    <p>Review your assigned work, see the current status split, and keep every complaint moving forward.</p>
+                    <h1 id="employeeWelcomeHeading">Welcome back.</h1>
                 </section>
                 <section class="card-grid" id="employeeStatCards"></section>
-                <section class="chart-pair">
+                <section class="horizontal-charts">
                     <article class="panel-card chart-panel">
                         <div class="section-head"><div><h2>Status Breakdown</h2><p>Assigned work grouped by complaint status.</p></div></div>
                         <div class="chart-canvas-wrap"><canvas id="employeeStatusChart"></canvas></div>
@@ -39,7 +38,10 @@
                     </article>
                 </section>
                 <section class="panel-card">
-                    <div class="section-head"><div><h2>Recent Assigned Complaints</h2><p>The latest complaints assigned to you.</p></div></div>
+                    <div class="section-head">
+                        <div><h2>Recent Assigned Complaints</h2><p>The latest complaints assigned to you.</p></div>
+                        <a class="btn btn-secondary btn-sm" href="assigned.html">View All <i class="bi bi-arrow-right"></i></a>
+                    </div>
                     <div class="list-stack" id="employeeRecentComplaints"></div>
                 </section>
             </main>
@@ -51,5 +53,6 @@
     <script src="../../assets/js/authGuard.js"></script>
     <script src="../../assets/js/realtime.js"></script>
     <script src="../../assets/js/dashboard.js"></script>
+    <script src="../../assets/js/scrollHijack.js"></script>
 </body>
 </html>
