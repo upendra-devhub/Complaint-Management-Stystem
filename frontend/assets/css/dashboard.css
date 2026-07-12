@@ -490,7 +490,10 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
 }
 
 .right-note {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
 }
 
 .mini-list {
@@ -919,7 +922,8 @@ body[data-role="employee"] .stat-card:hover {
 
 /* Compact chart cards in horizontal scroller */
 body[data-role="employee"] .horizontal-charts .chart-panel {
-  flex: 0 0 380px;
+  flex: 1;
+  min-width: 320px;
   height: 320px;
   min-height: unset;
 }

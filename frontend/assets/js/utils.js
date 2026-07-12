@@ -329,17 +329,19 @@
         return [
             '<article class="complaint-card">',
             '<div class="complaint-card-icon"><i class="bi bi-clipboard-data"></i></div>',
-            "<div>",
-            `<div class="split"><div><h3>${escapeHtml(complaint.title)}</h3>`,
+            '<div class="complaint-card-content">',
+            `<h3>${escapeHtml(complaint.title)}</h3>`,
             `<div class="complaint-meta"><span>${escapeHtml(complaint.complaintId || "")}</span>`,
             `<span>${escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</span>`,
-            `<span>${escapeHtml(complaint.location || "No location")}</span></div></div>`,
-            `<span class="badge ${statusClass(complaint.status)}">${escapeHtml(complaint.status || "Pending")}</span></div>`,
+            `<span>${escapeHtml(complaint.location || "No location")}</span></div>`,
             `<p>${escapeHtml(complaint.description || "")}</p>`,
             `<div class="complaint-footer"><span>Created ${relativeTime(complaint.createdAt)}</span>`,
             `<span>${complaint.assignedTo && complaint.assignedTo.name ? `Assigned to ${escapeHtml(complaint.assignedTo.name)}` : "Awaiting assignment"}</span></div>`,
             "</div>",
-            `<div class="right-note">${actionsHtml || ""}</div>`,
+            `<div class="right-note">`,
+            `<span class="badge ${statusClass(complaint.status)}">${escapeHtml(complaint.status || "Pending")}</span>`,
+            actionsHtml || "",
+            `</div>`,
             "</article>"
         ].join("");
     }
