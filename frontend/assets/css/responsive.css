@@ -86,6 +86,29 @@
         grid-template-columns: 1fr;
     }
 
+    /* Keep user stat cards in a row even on narrow screens */
+    body[data-role="user"] .card-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+
+    body[data-role="user"] .stat-card {
+        padding: 10px 12px;
+        gap: 4px;
+    }
+
+    body[data-role="user"] .stat-card .chip {
+        display: none;
+    }
+
+    body[data-role="user"] .stat-value {
+        font-size: 1rem;
+    }
+
+    body[data-role="user"] .stat-label {
+        font-size: 0.72rem;
+    }
+
     .status-tracker-head {
         display: grid;
     }

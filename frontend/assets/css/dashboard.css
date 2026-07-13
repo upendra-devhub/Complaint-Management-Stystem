@@ -1007,3 +1007,170 @@ body[data-role="employee"] .section-head h2 {
 body[data-role="employee"] .list-stack {
   gap: 12px;
 }
+
+/* ──────────────────────────────────────────
+   User (Citizen) Dashboard – compact & clean
+   ────────────────────────────────────────── */
+
+/* Force all 5 stat cards into a single row */
+body[data-role="user"] .card-grid {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+/* Compact stat cards – thinner & smaller */
+body[data-role="user"] .stat-card {
+  padding: 14px 16px;
+  gap: 6px;
+  border-radius: 16px;
+}
+
+body[data-role="user"] .stat-card::after {
+  width: 70px;
+  height: 70px;
+}
+
+body[data-role="user"] .stat-card:hover {
+  transform: translateY(-3px);
+}
+
+body[data-role="user"] .stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+body[data-role="user"] .stat-card .chip {
+  min-height: 24px;
+  padding: 0 10px;
+  font-size: 0.72rem;
+}
+
+body[data-role="user"] .stat-value {
+  font-size: clamp(1.1rem, 1.3vw, 1.35rem);
+}
+
+body[data-role="user"] .stat-label {
+  font-size: 0.82rem;
+}
+
+body[data-role="user"] .stat-note {
+  font-size: 0.75rem;
+}
+
+/* ── Recent Complaints – clean minimal list ── */
+
+body[data-role="user"] .list-stack {
+  gap: 0;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card {
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(126, 137, 208, 0.1);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: background 0.25s ease;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card:first-child {
+  border-radius: 14px 14px 0 0;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card:last-child {
+  border-bottom: none;
+  border-radius: 0 0 14px 14px;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card:only-child {
+  border-radius: 14px;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card::before {
+  display: none;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card:hover {
+  transform: none;
+  background: rgba(106, 92, 255, 0.04);
+  box-shadow: none;
+  border-color: rgba(126, 137, 208, 0.1);
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card-content h3 {
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-card-content p {
+  display: none;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-meta {
+  margin-top: 3px;
+  font-size: 0.82rem;
+  gap: 4px 10px;
+}
+
+/* Show only first 2 meta items (ID + dept) */
+body[data-role="user"][data-page="dashboard"] .complaint-meta span:nth-child(n+3) {
+  display: none;
+}
+
+body[data-role="user"][data-page="dashboard"] .complaint-footer {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  gap: 8px;
+}
+
+/* Hide 'Awaiting assignment' text */
+body[data-role="user"][data-page="dashboard"] .complaint-footer span:nth-child(2) {
+  display: none;
+}
+
+body[data-role="user"][data-page="dashboard"] .right-note {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+body[data-role="user"][data-page="dashboard"] .right-note .badge {
+  min-height: 26px;
+  padding: 0 10px;
+  font-size: 0.76rem;
+}
+
+body[data-role="user"][data-page="dashboard"] .right-note .btn {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: 0.8rem;
+  border-radius: 10px;
+}
+
+/* Tighter panel cards */
+body[data-role="user"] .panel-card {
+  padding: 22px;
+}
+
+body[data-role="user"] .section-head {
+  margin-bottom: 14px;
+}
+
+body[data-role="user"] .section-head h2 {
+  font-size: 1.05rem;
+}
