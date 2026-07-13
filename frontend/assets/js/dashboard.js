@@ -288,28 +288,6 @@
 
         const notifications = buildNotifications(complaints);
         document.getElementById("userNotifications").innerHTML = notifications || utils.createEmptyState("bi-bell", "No notifications yet", "Status changes will show up here.");
-
-        const tracker = document.getElementById("complaintTrackerForm");
-        const trackerResult = document.getElementById("complaintTrackerResult");
-
-        tracker.onsubmit = function (event) {
-            event.preventDefault();
-            const value = tracker.complaintId.value.trim().toLowerCase();
-            const match = complaints.find(function (complaint) {
-                return String(complaint.complaintId || "").toLowerCase() === value;
-            });
-
-            if (!match) {
-                userDashboardState.trackedComplaintId = "";
-                trackerResult.innerHTML = '<p class="helper-text">No complaint matched that complaint ID in your account.</p>';
-                return;
-            }
-
-            userDashboardState.trackedComplaintId = match._id;
-            renderTrackedComplaintResult();
-        };
-
-        renderTrackedComplaintResult();
     }
 
     async function loadAdminDashboard() {
