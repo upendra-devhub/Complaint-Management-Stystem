@@ -135,3 +135,46 @@
     font-size: 0.82rem;
     color: var(--color-text-soft);
 }
+
+/* Image wrapper for remove button overlay */
+.preview-card-img-wrap {
+    position: relative;
+}
+
+.preview-remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    z-index: 2;
+}
+
+.preview-card:hover .preview-remove-btn {
+    opacity: 1;
+}
+
+.preview-remove-btn:hover {
+    background: rgba(213, 64, 90, 0.85);
+}
+
+/* Scale down user pages by 15% */
+body[data-role="user"] .page-content {
+    font-size: 0.85em;
+}
+
+body[data-role="user"] .page-title h1 {
+    font-size: clamp(1.8rem, 2.1vw, 2.3rem);
+}
+

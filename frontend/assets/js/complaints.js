@@ -264,6 +264,28 @@
             return;
         }
 
+        // Track selected files in an array so individual items can be removed
+        var selectedFiles = [];
+
+        function renderImagePreviews() {
+            const preview = document.getElementById("imagePreview");
+            if (!selectedFiles.length) {
+                preview.innerHTML = '<p class="helper-text">No images selected yet.</p>';
+                return;
+            }
+            preview.innerHTML = selectedFiles.map(function (file, index) {
+                return [
+                    '<div class="preview-card">',
+                    '<div class="preview-card-img-wrap">',
+                    `<img src="${URL.createObjectURL(file)}" alt="${utils.escapeHtml(file.name)}">`,
+                    `<button type="button" class="preview-remove-btn" data-remove-index="${index}" title="Remove image"><i class="bi bi-x-lg"></i></button>`,
+                    '</div>',
+                    `<span>${utils.escapeHtml(file.name)}</span>`,
+                    "</div>"
+                ].join("");
+            }).join("");
+        }
+
         try {
             const departments = (await api.getDepartments()).data || [];
             const options = departments.map(function (department) {
@@ -275,16 +297,26 @@
         }
 
         form.images.addEventListener("change", function () {
-            const preview = document.getElementById("imagePreview");
-            const files = Array.from(form.images.files || []);
-            preview.innerHTML = files.map(function (file) {
-                return [
-                    '<div class="preview-card">',
-                    `<img src="${URL.createObjectURL(file)}" alt="${utils.escapeHtml(file.name)}">`,
-                    `<span>${utils.escapeHtml(file.name)}</span>`,
-                    "</div>"
-                ].join("");
-            }).join("");
+            var newFiles = Array.from(form.images.files || []);
+            newFiles.forEach(function (file) {
+                if (selectedFiles.length < 5) {
+                    selectedFiles.push(file);
+                }
+            });
+            // Reset the native input so re-selecting the same file works
+            form.images.value = "";
+            renderImagePreviews();
+        });
+
+        // Delegate click on remove buttons inside the preview grid
+        document.getElementById("imagePreview").addEventListener("click", function (event) {
+            var removeBtn = event.target.closest("[data-remove-index]");
+            if (!removeBtn) {
+                return;
+            }
+            var index = parseInt(removeBtn.getAttribute("data-remove-index"), 10);
+            selectedFiles.splice(index, 1);
+            renderImagePreviews();
         });
 
         form.addEventListener("submit", async function (event) {
@@ -299,13 +331,15 @@
                 formData.append("description", form.description.value.trim());
                 formData.append("department", form.department.value);
                 formData.append("location", form.location.value.trim());
-                Array.from(form.images.files || []).forEach(function (file) {
+                formData.append("priority", form.priority.value);
+                selectedFiles.forEach(function (file) {
                     formData.append("images", file);
                 });
 
                 await api.createComplaint(formData);
                 utils.showToast("Complaint created successfully.", "success");
                 form.reset();
+                selectedFiles = [];
                 document.getElementById("imagePreview").innerHTML = "";
             } catch (error) {
                 utils.showToast(error.message, "error");

@@ -40,10 +40,21 @@
                                     <select class="field-select" id="department" name="department" required></select>
                                 </div>
                             </div>
-                            <div class="form-field">
-                                <label for="location">Location</label>
-                                <input class="field-control" id="location" name="location" type="text" placeholder="MG Road, Downtown" required>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="priority">Priority</label>
+                                    <select class="field-select" id="priority" name="priority" required>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="location">Location</label>
+                                    <input class="field-control" id="location" name="location" type="text" placeholder="MG Road, Downtown" required>
+                                </div>
                             </div>
+
                             <div class="form-field">
                                 <label for="description">Description</label>
                                 <textarea class="field-textarea" id="description" name="description" placeholder="Describe the issue clearly..." required></textarea>
