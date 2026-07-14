@@ -311,8 +311,8 @@
         bindLayoutControls();
     }
 
-    function statCard(theme, icon, label, value, note) {
-        return [
+    function statCard(theme, icon, label, value, note, href) {
+        var cardHtml = [
             `<article class="panel-card stat-card ${theme}">`,
             '<div class="stat-top">',
             `<div class="stat-icon"><i class="bi ${icon}"></i></div>`,
@@ -323,6 +323,11 @@
             `<p class="stat-note">${escapeHtml(note)}</p>`,
             "</article>"
         ].join("");
+
+        if (href) {
+            return `<a class="stat-card-link" href="${href}">${cardHtml}</a>`;
+        }
+        return cardHtml;
     }
 
     function complaintCard(complaint, actionsHtml) {

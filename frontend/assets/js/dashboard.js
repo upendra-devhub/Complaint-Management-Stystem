@@ -24,8 +24,9 @@
     }
 
     function renderAdminDashboard(data) {
+        var adminComplaintsPage = window.CMS.session.resolve("pages/admin/complaints.html");
         document.getElementById("adminStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", data.cards.totalComplaints, ""),
+            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", data.cards.totalComplaints, "", adminComplaintsPage + "?status=all"),
             utils.statCard("kpi-blue", "bi-people", "Total Employees", data.cards.totalEmployees, ""),
             utils.statCard("kpi-green", "bi-diagram-3", "Departments", data.cards.totalDepartments, "")
         ].join("");
@@ -176,10 +177,11 @@
             welcomeHeading.textContent = userName ? "Welcome back, " + userName + "." : "Welcome back.";
         }
 
+        var empAssignedPage = window.CMS.session.resolve("pages/employee/assigned.html");
         document.getElementById("employeeStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-check", "Assigned", dashboard.cards.assigned, ""),
-            utils.statCard("kpi-orange", "bi-hourglass-split", "In Progress", dashboard.cards.inProgress, ""),
-            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "")
+            utils.statCard("kpi-purple", "bi-clipboard-check", "Assigned", dashboard.cards.assigned, "", empAssignedPage + "?status=Assigned"),
+            utils.statCard("kpi-orange", "bi-hourglass-split", "In Progress", dashboard.cards.inProgress, "", empAssignedPage + "?status=In Progress"),
+            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "", empAssignedPage + "?status=Resolved")
         ].join("");
 
         // Limit recent complaints to 4 — full list is on the Assigned Complaints page
@@ -276,12 +278,13 @@
             welcomeHeading.textContent = userName ? "Welcome back, " + userName + "." : "Welcome back.";
         }
 
+        var userComplaintsPage = window.CMS.session.resolve("pages/user/myComplaints.html");
         document.getElementById("userStatCards").innerHTML = [
-            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", dashboard.cards.totalComplaints, ""),
-            utils.statCard("kpi-orange", "bi-hourglass-split", "Pending", dashboard.cards.pending, ""),
-            utils.statCard("kpi-blue", "bi-person-workspace", "Assigned", dashboard.cards.assigned, ""),
-            utils.statCard("kpi-pink", "bi-tools", "In Progress", dashboard.cards.inProgress, ""),
-            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "")
+            utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", dashboard.cards.totalComplaints, "", userComplaintsPage + "?status=all"),
+            utils.statCard("kpi-orange", "bi-hourglass-split", "Pending", dashboard.cards.pending, "", userComplaintsPage + "?status=Pending"),
+            utils.statCard("kpi-blue", "bi-person-workspace", "Assigned", dashboard.cards.assigned, "", userComplaintsPage + "?status=Assigned"),
+            utils.statCard("kpi-pink", "bi-tools", "In Progress", dashboard.cards.inProgress, "", userComplaintsPage + "?status=In Progress"),
+            utils.statCard("kpi-green", "bi-check-circle", "Resolved", dashboard.cards.resolved, "", userComplaintsPage + "?status=Resolved")
         ].join("");
 
         renderComplaintList(document.getElementById("userRecentComplaints"), dashboard.recentComplaints || [], "No complaints filed yet");

@@ -12,6 +12,7 @@
             query: "",
             bound: false,
             currentPage: 1,
+            statusFilter: "all",
             containerId: "myComplaintsTable"
         },
         adminComplaints: {
@@ -537,6 +538,52 @@
         };
     }
 
+    /**
+     * Read ?status= from URL and pre-apply it on the matching table state.
+     * Also visually activate the right filter chip and open the filter panel.
+     */
+    function applyUrlStatusFilter(state, chipsContainerId, panelId, toggleBtnId) {
+        var urlStatus = utils.readQueryParam("status");
+        if (!urlStatus) {
+            return;
+        }
+
+        state.statusFilter = urlStatus;
+        state.currentPage = 1;
+
+        /* Open the filter panel and highlight the right chip */
+        var panel = document.getElementById(panelId);
+        var toggleBtn = document.getElementById(toggleBtnId);
+        var chipsContainer = document.getElementById(chipsContainerId);
+
+        if (panel) {
+            panel.classList.add("open");
+        }
+        if (toggleBtn) {
+            toggleBtn.classList.add("active");
+        }
+
+        if (chipsContainer) {
+            var allChips = chipsContainer.querySelectorAll(".filter-chip");
+            allChips.forEach(function (c) { c.classList.remove("active"); });
+
+            var matchingChip = chipsContainer.querySelector('[data-status="' + urlStatus + '"]');
+            if (matchingChip) {
+                matchingChip.classList.add("active");
+            }
+
+            /* Show badge on toggle button */
+            if (toggleBtn && urlStatus !== "all") {
+                var existingBadge = toggleBtn.querySelector(".filter-count");
+                if (existingBadge) {
+                    existingBadge.textContent = "1";
+                } else {
+                    toggleBtn.insertAdjacentHTML("beforeend", ' <span class="filter-count">1</span>');
+                }
+            }
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         initComplaintForm();
 
@@ -571,7 +618,24 @@
 
         document.addEventListener('click', handlePaginationClick);
 
-        /* ── Filter panel toggle + chip logic ── */
+        /* ── Apply URL-based status filter on page load ── */
+
+        /* Admin complaints page */
+        if (document.getElementById(tableState.adminComplaints.containerId)) {
+            applyUrlStatusFilter(tableState.adminComplaints, "statusFilterChips", "filterPanel", "filterToggleBtn");
+        }
+
+        /* Employee assigned page */
+        if (document.getElementById(tableState.employeeAssigned.containerId)) {
+            applyUrlStatusFilter(tableState.employeeAssigned, "employeeStatusFilterChips", "employeeFilterPanel", "employeeFilterToggleBtn");
+        }
+
+        /* User myComplaints page */
+        if (document.getElementById(tableState.myComplaints.containerId)) {
+            applyUrlStatusFilter(tableState.myComplaints, "userStatusFilterChips", "userFilterPanel", "userFilterToggleBtn");
+        }
+
+        /* ── Filter panel toggle + chip logic (Admin) ── */
         var filterToggleBtn = document.getElementById('filterToggleBtn');
         var filterPanel = document.getElementById('filterPanel');
         var statusFilterChips = document.getElementById('statusFilterChips');
@@ -659,6 +723,54 @@
                             existingBadge.textContent = '1';
                         } else {
                             empFilterToggleBtn.insertAdjacentHTML('beforeend', ' <span class="filter-count">1</span>');
+                        }
+                    } else if (existingBadge) {
+                        existingBadge.remove();
+                    }
+                }
+            });
+        }
+
+        /* ── User myComplaints filter panel toggle + chip logic ── */
+        var userFilterToggleBtn = document.getElementById('userFilterToggleBtn');
+        var userFilterPanel = document.getElementById('userFilterPanel');
+        var userStatusFilterChips = document.getElementById('userStatusFilterChips');
+
+        if (userFilterToggleBtn && userFilterPanel) {
+            userFilterToggleBtn.addEventListener('click', function () {
+                var isOpen = userFilterPanel.classList.toggle('open');
+                userFilterToggleBtn.classList.toggle('active', isOpen);
+            });
+        }
+
+        if (userStatusFilterChips) {
+            userStatusFilterChips.addEventListener('click', function (event) {
+                var chip = event.target.closest('[data-status]');
+                if (!chip) {
+                    return;
+                }
+
+                var status = chip.getAttribute('data-status');
+                var state = tableState.myComplaints;
+
+                /* Update active chip */
+                var allChips = userStatusFilterChips.querySelectorAll('.filter-chip');
+                allChips.forEach(function (c) { c.classList.remove('active'); });
+                chip.classList.add('active');
+
+                /* Apply filter */
+                state.statusFilter = status;
+                state.currentPage = 1;
+                renderTableState(state);
+
+                /* Update the filter button badge */
+                if (userFilterToggleBtn) {
+                    var existingBadge = userFilterToggleBtn.querySelector('.filter-count');
+                    if (status !== 'all') {
+                        if (existingBadge) {
+                            existingBadge.textContent = '1';
+                        } else {
+                            userFilterToggleBtn.insertAdjacentHTML('beforeend', ' <span class="filter-count">1</span>');
                         }
                     } else if (existingBadge) {
                         existingBadge.remove();
