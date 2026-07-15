@@ -506,6 +506,42 @@
         return new URLSearchParams(window.location.search).get(name);
     }
 
+    function shouldLoadVercelSpeedInsights() {
+        var hostname = window.location.hostname;
+
+        if (window.location.protocol === "file:") {
+            return false;
+        }
+
+        return hostname !== "localhost" && hostname !== "127.0.0.1" && hostname !== "::1";
+    }
+
+    function initVercelSpeedInsights() {
+        var mountTarget;
+        var script;
+
+        if (!shouldLoadVercelSpeedInsights()) {
+            return;
+        }
+
+        if (document.querySelector('script[data-cms-speed-insights="true"]')) {
+            return;
+        }
+
+        window.si = window.si || function () {
+            (window.siq = window.siq || []).push(arguments);
+        };
+
+        script = document.createElement("script");
+        script.defer = true;
+        script.src = "/_vercel/speed-insights/script.js";
+        script.dataset.cmsSpeedInsights = "true";
+        mountTarget = document.body || document.head || document.documentElement;
+        mountTarget.appendChild(script);
+    }
+
+    initVercelSpeedInsights();
+
     window.CMS = window.CMS || {};
     window.CMS.utils = {
         qs: qs,
