@@ -23,78 +23,12 @@
         }).join("");
     }
 
-    function reorderChartSeries(labels, values, order) {
-        return order.map(function (label) {
-            var index = labels.indexOf(label);
-            return {
-                label: label,
-                value: index === -1 ? 0 : (values[index] || 0)
-            };
-        });
-    }
-
-    function buildAdminLegendMarkup(items) {
-        var total = items.reduce(function (sum, item) {
-            return sum + item.value;
-        }, 0);
-
-        return [
-            '<div class="admin-legend-list">',
-            items.map(function (item) {
-                var percentage = total ? ((item.value / total) * 100).toFixed(1) : "0.0";
-                return [
-                    '<div class="admin-legend-item">',
-                    `<span class="admin-legend-dot" style="--legend-color:${item.color};"></span>`,
-                    '<div class="admin-legend-copy">',
-                    `<strong>${utils.escapeHtml(item.label)}</strong>`,
-                    `<span>${item.value} (${percentage}%)</span>`,
-                    '</div>',
-                    '</div>'
-                ].join("");
-            }).join(""),
-            '</div>'
-        ].join("");
-    }
-
-    function buildDepartmentSummaryMarkup(labels, values) {
-        var items = labels.map(function (label, index) {
-            return {
-                label: label,
-                value: values[index] || 0
-            };
-        }).sort(function (a, b) {
-            return b.value - a.value;
-        });
-
-        if (!items.length) {
-            return '<p class="helper-text">Department metrics will appear here once complaints are available.</p>';
-        }
-
-        return [
-            '<div class="admin-legend-list">',
-            items.map(function (item) {
-                return [
-                    '<div class="admin-legend-item admin-legend-item-wide">',
-                    '<span class="admin-legend-dot" style="--legend-color:#4a90ff;"></span>',
-                    '<div class="admin-legend-copy">',
-                    `<strong>${utils.escapeHtml(item.label)}</strong>`,
-                    `<span>${item.value} complaints</span>`,
-                    '</div>',
-                    '</div>'
-                ].join("");
-            }).join(""),
-            '</div>'
-        ].join("");
-    }
-
     function renderAdminDashboard(data) {
         var adminComplaintsPage = window.CMS.session.resolve("pages/admin/complaints.html");
-        var adminEmployeesPage = window.CMS.session.resolve("pages/admin/employees.html");
-        var adminDepartmentsPage = window.CMS.session.resolve("pages/admin/departments.html");
         document.getElementById("adminStatCards").innerHTML = [
             utils.statCard("kpi-purple", "bi-clipboard-data", "Total Complaints", data.cards.totalComplaints, "", adminComplaintsPage + "?status=all"),
-            utils.statCard("kpi-blue", "bi-people", "Total Employees", data.cards.totalEmployees, "", adminEmployeesPage),
-            utils.statCard("kpi-green", "bi-diagram-3", "Departments", data.cards.totalDepartments, "", adminDepartmentsPage)
+            utils.statCard("kpi-blue", "bi-people", "Total Employees", data.cards.totalEmployees, ""),
+            utils.statCard("kpi-green", "bi-diagram-3", "Departments", data.cards.totalDepartments, "")
         ].join("");
 
         var adminComplaints = data.recentComplaints || [];
@@ -169,101 +103,32 @@
             renderAdminComplaintPage();
         });
 
-        var statusSeries = reorderChartSeries(
-            data.statusChart.labels || [],
-            data.statusChart.data || [],
-            ["Pending", "Assigned", "In Progress", "Resolved"]
-        );
-        var prioritySeries = reorderChartSeries(
-            data.priorityChart.labels || [],
-            data.priorityChart.data || [],
-            ["High", "Medium", "Low"]
-        );
-        var statusColors = ["#2f80ff", "#ff5f52", "#ffa11a", "#34c889"];
-        var priorityColors = ["#ff5f52", "#ffa11a", "#34c889"];
-
-        document.getElementById("adminStatusLegend").innerHTML = buildAdminLegendMarkup(
-            statusSeries.map(function (item, index) {
-                return {
-                    label: item.label,
-                    value: item.value,
-                    color: statusColors[index]
-                };
-            })
-        );
-
-        document.getElementById("adminPriorityLegend").innerHTML = buildAdminLegendMarkup(
-            prioritySeries.map(function (item, index) {
-                return {
-                    label: item.label,
-                    value: item.value,
-                    color: priorityColors[index]
-                };
-            })
-        );
-
-        document.getElementById("adminDepartmentSummary").innerHTML = buildDepartmentSummaryMarkup(
-            data.departmentChart.labels || [],
-            data.departmentChart.data || []
-        );
-
         utils.mountChart(document.getElementById("adminStatusChart"), {
-            type: "pie",
+            type: "line",
             data: {
-                labels: statusSeries.map(function (item) { return item.label; }),
+                labels: data.statusChart.labels,
                 datasets: [{
-                    data: statusSeries.map(function (item) { return item.value; }),
-                    backgroundColor: statusColors,
-                    borderColor: "#ffffff",
-                    borderWidth: 3,
-                    hoverOffset: 8
+                    label: "Complaints",
+                    data: data.statusChart.data,
+                    borderColor: "#6a5cff",
+                    backgroundColor: "rgba(106, 92, 255, 0.12)",
+                    tension: 0.38,
+                    fill: true
                 }]
             },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.label + ": " + context.raw;
-                            }
-                        }
-                    }
-                }
-            }
+            options: { maintainAspectRatio: false }
         });
 
         utils.mountChart(document.getElementById("adminPriorityChart"), {
             type: "doughnut",
             data: {
-                labels: prioritySeries.map(function (item) { return item.label; }),
+                labels: data.priorityChart.labels,
                 datasets: [{
-                    data: prioritySeries.map(function (item) { return item.value; }),
-                    backgroundColor: priorityColors,
-                    borderColor: "#ffffff",
-                    borderWidth: 3,
-                    hoverOffset: 8
+                    data: data.priorityChart.data,
+                    backgroundColor: ["#8bc9ff", "#ffcf76", "#63d7a1"]
                 }]
             },
-            options: {
-                maintainAspectRatio: false,
-                cutout: "58%",
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.label + ": " + context.raw;
-                            }
-                        }
-                    }
-                }
-            }
+            options: { maintainAspectRatio: false }
         });
 
         utils.mountChart(document.getElementById("adminDepartmentChart"), {
@@ -273,46 +138,14 @@
                 datasets: [{
                     label: "Complaints",
                     data: data.departmentChart.data,
-                    backgroundColor: "#4a90ff",
-                    borderRadius: 12,
-                    maxBarThickness: 42
+                    backgroundColor: ["#6a5cff", "#7cccf8", "#63d7a1", "#ffcf76", "#ff8ca7"]
                 }]
             },
             options: {
                 maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: "#66729a",
-                            font: {
-                                weight: 600
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: "rgba(126, 137, 208, 0.12)"
-                        },
-                        ticks: {
-                            color: "#66729a",
-                            precision: 0
-                        }
-                    }
-                },
                 plugins: {
                     legend: {
                         display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return "Complaints: " + context.raw;
-                            }
-                        }
                     }
                 }
             }

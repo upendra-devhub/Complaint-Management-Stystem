@@ -381,20 +381,6 @@
         }).join("");
     }
 
-    function getDetailsBackLink() {
-        var user = window.CMS.session.getUser() || {};
-
-        if (user.role === "admin") {
-            return window.CMS.session.resolve("pages/admin/complaints.html");
-        }
-
-        if (user.role === "employee") {
-            return window.CMS.session.resolve("pages/employee/assigned.html");
-        }
-
-        return window.CMS.session.resolve("pages/user/myComplaints.html");
-    }
-
     async function loadDetailsPage() {
         const complaintId = utils.readQueryParam("id");
         const container = document.getElementById("complaintDetailsRoot");
@@ -403,65 +389,26 @@
         }
 
         const complaint = (await api.getComplaintById(complaintId)).data;
-        const backHref = getDetailsBackLink();
-        const detailStatusClass = utils.statusClass(complaint.status);
         const images = (complaint.images || []).filter(Boolean).map(function (image) {
             return `<div class="preview-card"><img src="${image}" alt="Complaint evidence"></div>`;
         }).join("");
 
         container.innerHTML = [
-            '<div class="complaint-detail-shell">',
-            '<section class="panel-card complaint-detail-hero">',
-            '<div class="complaint-detail-header">',
-            '<div class="page-title complaint-detail-copy">',
-            '<span class="eyebrow">Complaint overview</span>',
-            `<h1>${utils.escapeHtml(complaint.title)}</h1>`,
-            `<p>${utils.escapeHtml(complaint.description)}</p>`,
-            '<div class="complaint-detail-tags">',
-            `<span class="chip"><i class="bi bi-hash"></i>${utils.escapeHtml(complaint.complaintId)}</span>`,
-            `<span class="chip"><i class="bi bi-building"></i>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</span>`,
-            `<span class="chip"><i class="bi bi-geo-alt"></i>${utils.escapeHtml(complaint.location || "Location not available")}</span>`,
-            '</div>',
-            '</div>',
-            '<div class="complaint-detail-actions">',
-            `<a class="btn btn-secondary" href="${backHref}"><i class="bi bi-arrow-left"></i>Back</a>`,
-            `<span class="badge ${detailStatusClass}">${utils.escapeHtml(complaint.status || "Pending")}</span>`,
-            '</div>',
-            '</div>',
-            '<div class="complaint-overview-grid">',
-            `<div class="detail-metric-card"><span>Reported On</span><strong>${utils.formatDate(complaint.createdAt)}</strong><small>Created ${utils.relativeTime(complaint.createdAt)}</small></div>`,
-            `<div class="detail-metric-card"><span>Last Updated</span><strong>${utils.formatDateTime(complaint.updatedAt || complaint.createdAt)}</strong><small>Latest workflow activity</small></div>`,
-            `<div class="detail-metric-card"><span>Priority</span><strong>${utils.escapeHtml(complaint.priority || "Medium")}</strong><small>Current urgency level</small></div>`,
-            `<div class="detail-metric-card"><span>Evidence</span><strong>${(complaint.images || []).length}</strong><small>Uploaded supporting images</small></div>`,
-            '</div>',
-            '</section>',
-            utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
-            '<section class="two-column complaint-detail-sections">',
-            '<div class="panel-card">',
-            '<div class="section-head"><div><h2>Issue snapshot</h2><p>Everything important, grouped into a calmer and easier-to-scan layout.</p></div></div>',
-            '<div class="details-grid complaint-details-grid">',
+            '<section class="panel-card stack">',
+            `<div class="page-title"><span class="eyebrow">Complaint details</span><h1>${utils.escapeHtml(complaint.title)}</h1>`,
+            `<p>${utils.escapeHtml(complaint.description)}</p></div>`,
+            '<div class="details-grid">',
             `<div class="detail-tile"><span>Complaint ID</span><strong>${utils.escapeHtml(complaint.complaintId)}</strong></div>`,
-            `<div class="detail-tile"><span>Status</span><strong><span class="badge ${detailStatusClass}">${utils.escapeHtml(complaint.status)}</span></strong></div>`,
+            `<div class="detail-tile"><span>Status</span><strong><span class="badge ${utils.statusClass(complaint.status)}">${utils.escapeHtml(complaint.status)}</span></strong></div>`,
             `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
-            `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location || "Not available")}</strong></div>`,
-            `<div class="detail-tile"><span>Submitted By</span><strong>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</strong></div>`,
-            `<div class="detail-tile"><span>Assigned To</span><strong>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</strong></div>`,
-            '</div>',
-            '</div>',
-            '<div class="panel-card">',
-            '<div class="section-head"><div><h2>People and notes</h2><p>Stay aligned on who owns the complaint and what update was shared most recently.</p></div></div>',
-            '<div class="detail-note-stack">',
-            `<article class="detail-note-card"><span>Citizen</span><strong>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</strong><p>Original reporter of this issue.</p></article>`,
-            `<article class="detail-note-card"><span>Assigned Employee</span><strong>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</strong><p>${complaint.assignedTo && complaint.assignedTo.name ? "This team member is currently responsible for the complaint." : "Assignment will appear here once an employee is mapped."}</p></article>`,
-            `<article class="detail-note-card"><span>Latest Remark</span><strong>${utils.escapeHtml(complaint.employeeRemark ? "Shared update" : "No remark yet")}</strong><p>${utils.escapeHtml(complaint.employeeRemark || "No employee remark has been added yet.")}</p></article>`,
-            '</div>',
-            '</div>',
-            '</section>',
-            '<section class="two-column complaint-detail-sections complaint-detail-lower-grid">',
-            `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2><p>A full record of the complaint journey from creation to resolution.</p></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
-            `<div class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2><p>Photos and proof attached to support the complaint.</p></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></div>`,
+            `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
+            "</div></section>",
+            utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
+            '<section class="two-column">',
+            `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
+            `<div class="panel-card"><div class="section-head"><div><h2>Participants</h2></div></div><div class="stack"><div><strong>Citizen</strong><p>${utils.escapeHtml(complaint.createdBy && complaint.createdBy.name ? complaint.createdBy.name : "Not available")}</p></div><div><strong>Assigned Employee</strong><p>${utils.escapeHtml(complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Not assigned yet")}</p></div><div><strong>Employee Remark</strong><p>${utils.escapeHtml(complaint.employeeRemark || "No remark added yet.")}</p></div></div></div>`,
             "</section>",
-            '</div>'
+            `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
         ].join("");
     }
 

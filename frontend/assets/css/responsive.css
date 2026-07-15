@@ -6,14 +6,6 @@
         grid-template-columns: 1fr;
     }
 
-    body[data-role="admin"] .horizontal-charts {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .complaint-overview-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     body[data-page="employees"] .page-content,
     body[data-page="departments"] .page-content {
         overflow-y: auto;
@@ -92,20 +84,6 @@
     .card-grid,
     .quick-actions {
         grid-template-columns: 1fr;
-    }
-
-    body[data-role="admin"] .horizontal-charts {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-chart-layout,
-    .complaint-detail-header,
-    .complaint-overview-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .complaint-detail-actions {
-        align-items: flex-start;
     }
 
     /* Keep user stat cards in a row even on narrow screens */
@@ -222,16 +200,6 @@
 
     .panel-card {
         padding: 20px;
-    }
-
-    .complaint-detail-tags {
-        gap: 8px;
-    }
-
-    .complaint-detail-tags .chip,
-    .complaint-detail-actions .btn {
-        width: 100%;
-        justify-content: center;
     }
 
     .horizontal-charts .chart-panel {
