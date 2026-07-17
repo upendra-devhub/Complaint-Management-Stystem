@@ -15,7 +15,8 @@ const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
         title,
         description,
         department,
-        location
+        location,
+        priority
     }=complaintData;
 
 
@@ -41,7 +42,7 @@ const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
         createdBy: userId,
         location,
         images:imageUrls,
-        priority:'Medium',
+        priority: priority || 'Medium',
         status:"Pending"
     });
 
