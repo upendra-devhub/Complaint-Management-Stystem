@@ -187,6 +187,11 @@
                 body: JSON.stringify(payload)
             });
         },
+        deleteComplaint: function (id) {
+            return request(`/complaints/${id}`, {
+                method: "DELETE"
+            });
+        },
         getMyProfile: function () {
             return request("/users/me");
         },

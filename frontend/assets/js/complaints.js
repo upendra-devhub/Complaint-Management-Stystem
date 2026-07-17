@@ -50,6 +50,7 @@
         const detailsHref = window.CMS.session.resolve(`pages/user/details.html?id=${complaint._id}`);
         const assignButton = role === "admin" ? `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>` : "";
         const statusButton = role === "employee" ? `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>` : "";
+        const deleteButton = role === "user" && complaint.status === "Pending" ? `<button class="row-action-btn delete-btn" data-delete-id="${complaint._id}" title="Delete Complaint"><i class="bi bi-trash3"></i> Delete</button>` : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
         const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
         const statusCls = utils.statusClass(complaint.status);
@@ -73,7 +74,7 @@
             '  <div class="cc-actions">',
             `    <div class="row-actions">`,
             `      <a class="row-action-btn view-btn" href="${detailsHref}" title="View Details"><i class="bi bi-eye"></i> View</a>`,
-            `      ${assignButton}${statusButton}`,
+            `      ${assignButton}${statusButton}${deleteButton}`,
             '    </div>',
             '  </div>',
             '</div>'
@@ -361,6 +362,41 @@
         bindSearch(state);
         state.items = (await api.getMyComplaints()).data || [];
         renderTableState(state);
+
+        // Delete complaint handler
+        container.onclick = function (event) {
+            var deleteBtn = event.target.closest("[data-delete-id]");
+            if (!deleteBtn) {
+                return;
+            }
+
+            var deleteId = deleteBtn.getAttribute("data-delete-id");
+            var complaint = state.items.find(function (item) {
+                return item._id === deleteId;
+            });
+
+            utils.openModal([
+                '<div class="section-head"><div><h2>Delete Complaint</h2><p>This action cannot be undone.</p></div>',
+                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                '<div class="stack">',
+                `<p>Are you sure you want to delete <strong>${utils.escapeHtml(complaint ? complaint.title : "")}</strong>?</p>`,
+                '<div class="row-actions" style="justify-content:flex-end;gap:0.75rem;margin-top:1rem;">',
+                '<button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>',
+                `<button type="button" class="btn btn-primary" id="confirmDeleteBtn" style="background:#EF4444;border-color:#EF4444;">Delete</button>`,
+                '</div></div>'
+            ].join(""));
+
+            document.getElementById("confirmDeleteBtn").addEventListener("click", async function () {
+                try {
+                    await api.deleteComplaint(deleteId);
+                    utils.closeModal();
+                    utils.showToast("Complaint deleted successfully.", "success");
+                    await loadMyComplaintsPage();
+                } catch (err) {
+                    utils.showToast(err.message, "error");
+                }
+            });
+        };
     }
 
     function buildTimeline(complaint) {
@@ -389,6 +425,7 @@
         }
 
         const complaint = (await api.getComplaintById(complaintId)).data;
+        const currentUser = window.CMS.session.getUser();
         const images = (complaint.images || []).filter(Boolean).map(function (image) {
             return `<div class="preview-card"><img src="${image}" alt="Complaint evidence"></div>`;
         }).join("");
@@ -402,7 +439,12 @@
             `<div class="detail-tile"><span>Status</span><strong><span class="badge ${utils.statusClass(complaint.status)}">${utils.escapeHtml(complaint.status)}</span></strong></div>`,
             `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
             `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
-            "</div></section>",
+            "</div>",
+            // Admin assign button — only shown when complaint is Pending and user is admin
+            (currentUser && currentUser.role === "admin" && complaint.status === "Pending")
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsAssignBtn"><i class="bi bi-person-plus"></i> Assign to Employee</button></div>'
+                : '',
+            "</section>",
             utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
             '<section class="two-column">',
             `<div class="panel-card"><div class="section-head"><div><h2>Status timeline</h2></div></div><div class="timeline">${buildTimeline(complaint)}</div></div>`,
@@ -410,6 +452,51 @@
             "</section>",
             `<section class="panel-card"><div class="section-head"><div><h2>Uploaded evidence</h2></div></div><div class="preview-grid">${images || "<p class='helper-text'>No images uploaded for this complaint.</p>"}</div></section>`
         ].join("");
+
+        // Wire up admin assign button on details page
+        var detailsAssignBtn = document.getElementById("detailsAssignBtn");
+        if (detailsAssignBtn) {
+            detailsAssignBtn.addEventListener("click", async function () {
+                try {
+                    var employees = (await api.getEmployees()).data || [];
+                    var matchingEmployees = employees.filter(function (employee) {
+                        return complaint.department && employee.department && complaint.department._id === employee.department._id;
+                    });
+
+                    if (!matchingEmployees.length) {
+                        utils.showToast("No employees are available in this complaint's department yet.", "info");
+                        return;
+                    }
+
+                    utils.openModal([
+                        '<div class="section-head"><div><h2>Assign Complaint</h2><p>Select an employee from the same department.</p></div>',
+                        '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                        `<form id="detailsAssignForm" class="form-grid"><input type="hidden" name="complaintId" value="${complaint._id}">`,
+                        '<div class="form-field"><label>Complaint</label>',
+                        `<input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
+                        '<div class="form-field"><label>Employee</label><select class="field-select" name="employeeId" required>',
+                        matchingEmployees.map(function (employee) {
+                            return `<option value="${employee._id}">${utils.escapeHtml(employee.name)} (${utils.escapeHtml(employee.department && employee.department.name ? employee.department.name : "No department")})</option>`;
+                        }).join(""),
+                        '</select></div><button type="submit" class="btn btn-primary">Assign Now</button></form>'
+                    ].join(""));
+
+                    document.getElementById("detailsAssignForm").addEventListener("submit", async function (submitEvent) {
+                        submitEvent.preventDefault();
+                        try {
+                            await api.assignComplaint(complaint._id, submitEvent.target.employeeId.value);
+                            utils.closeModal();
+                            utils.showToast("Complaint assigned successfully.", "success");
+                            await loadDetailsPage();
+                        } catch (err) {
+                            utils.showToast(err.message, "error");
+                        }
+                    });
+                } catch (err) {
+                    utils.showToast(err.message, "error");
+                }
+            });
+        }
     }
 
     async function loadAdminComplaintsPage() {

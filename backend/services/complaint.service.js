@@ -302,6 +302,35 @@ const updateComplaintStatusService = async (
 };
 
 
+// Delete complaint (user only, while still Pending)
+
+const deleteComplaintService = async (complaintId, userId) => {
+    const complaint = await Complaint.findById(complaintId);
+
+    if (!complaint) {
+        throw new Error("Complaint not found");
+    }
+
+    // Only the citizen who created the complaint can delete it
+    if (complaint.createdBy.toString() !== userId) {
+        const error = new Error("Access denied. You can only delete your own complaints.");
+        error.statusCode = 403;
+        throw error;
+    }
+
+    // Only allow deletion while complaint is still Pending
+    if (complaint.status !== "Pending") {
+        throw new Error("Only pending complaints can be deleted. This complaint has already been assigned.");
+    }
+
+    await Complaint.findByIdAndDelete(complaintId);
+
+    emitComplaintChanged("deleted", { _id: complaintId });
+
+    return { _id: complaintId };
+};
+
+
 module.exports={
     createComplaintService,
     getMyComplaintsService,
@@ -309,5 +338,6 @@ module.exports={
     getAllComplaintsService,
     assignComplaintService,
     getAssignedComplaintsService,
-    updateComplaintStatusService
+    updateComplaintStatusService,
+    deleteComplaintService
 }

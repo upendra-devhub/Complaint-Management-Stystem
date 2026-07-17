@@ -9,7 +9,8 @@ const {
     getAllComplaintsService,
     assignComplaintService,
     getAssignedComplaintsService,
-    updateComplaintStatusService
+    updateComplaintStatusService,
+    deleteComplaintService
 }=require('../services/complaint.service')
 
 const sendResponse=require('../utils/response');
@@ -187,6 +188,28 @@ const updateComplaintStatus=async(req,res)=>{
     }
 }
 
+// delete complaint (user only, while Pending)
+
+const deleteComplaint=async(req,res)=>{
+    try{
+        const result=await deleteComplaintService(req.params.id, req.user.id);
+        sendResponse(
+            res,
+            200,
+            true,
+            'Complaint deleted successfully',
+            result
+        )
+    }catch(error){
+        sendResponse(
+            res,
+            error.statusCode || 400,
+            false,
+            error.message
+        )
+    }
+}
+
 module.exports={
     createComplaint,
     getMyComplaints,
@@ -194,5 +217,6 @@ module.exports={
     getAllComplaints,
     assignComplaint,
     getAssignedComplaints,
-    updateComplaintStatus
+    updateComplaintStatus,
+    deleteComplaint
 }

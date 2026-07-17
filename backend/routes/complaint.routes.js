@@ -12,7 +12,8 @@ const {
     getAllComplaints,
     assignComplaint,
     getAssignedComplaints,
-    updateComplaintStatus
+    updateComplaintStatus,
+    deleteComplaint
  }=require('../controllers/complaint.controller');
 
 
@@ -35,5 +36,7 @@ router.get('/',authMiddleware,roleMiddleware('admin'),getAllComplaints);
 router.put('/:id/assign',authMiddleware,roleMiddleware('admin'),assignComplaint)
 
 router.put('/:id/status',authMiddleware,roleMiddleware('employee'),updateComplaintStatus)
+
+router.delete('/:id',authMiddleware,roleMiddleware('user'),deleteComplaint)
 
 module.exports = router;
