@@ -109,7 +109,10 @@
                 labels: data.statusChart.labels,
                 datasets: [{
                     data: data.statusChart.data,
-                    backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"],
+                    backgroundColor: data.statusChart.labels.map(function(label) {
+                        var colors = { "Pending": "#EF4444", "Resolved": "#10B981", "In Progress": "#F59E0B", "Assigned": "#3B82F6" };
+                        return colors[label] || "#8B5CF6";
+                    }),
                     borderColor: "#1a1a2e",
                     borderWidth: 2,
                     hoverOffset: 18
@@ -161,7 +164,9 @@
                 datasets: [{
                     label: "Complaints",
                     data: data.departmentChart.data,
-                    backgroundColor: ["#6a5cff", "#7cccf8", "#63d7a1", "#ffcf76", "#ff8ca7"]
+                    backgroundColor: ["#6a5cff", "#7cccf8", "#63d7a1", "#ffcf76", "#ff8ca7"],
+                    maxBarThickness: 40,
+                    borderRadius: 4
                 }]
             },
             options: {
@@ -231,7 +236,10 @@
                 labels: Object.keys(statusData),
                 datasets: [{
                     data: Object.values(statusData),
-                    backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"],
+                    backgroundColor: Object.keys(statusData).map(function(label) {
+                        var colors = { "Pending": "#EF4444", "Resolved": "#10B981", "In Progress": "#F59E0B", "Assigned": "#3B82F6" };
+                        return colors[label] || "#8B5CF6";
+                    }),
                     borderColor: "#1a1a2e",
                     borderWidth: 2,
                     hoverOffset: 18
