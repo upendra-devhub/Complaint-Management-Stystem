@@ -104,19 +104,42 @@
         });
 
         utils.mountChart(document.getElementById("adminStatusChart"), {
-            type: "line",
+            type: "pie",
             data: {
                 labels: data.statusChart.labels,
                 datasets: [{
-                    label: "Complaints",
                     data: data.statusChart.data,
-                    borderColor: "#6a5cff",
-                    backgroundColor: "rgba(106, 92, 255, 0.12)",
-                    tension: 0.38,
-                    fill: true
+                    backgroundColor: ["#6a5cff", "#ffcf76", "#63d7a1", "#7cccf8", "#ff8ca7", "#a78bfa"],
+                    borderColor: "#1a1a2e",
+                    borderWidth: 2,
+                    hoverOffset: 18
                 }]
             },
-            options: { maintainAspectRatio: false }
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                var label = context.label || "";
+                                var value = context.parsed || 0;
+                                var total = context.dataset.data.reduce(function (a, b) { return a + b; }, 0);
+                                var pct = total ? Math.round((value / total) * 100) : 0;
+                                return label + ": " + value + " (" + pct + "%)";
+                            }
+                        }
+                    },
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            color: "#ccc",
+                            padding: 14,
+                            usePointStyle: true,
+                            pointStyleWidth: 10
+                        }
+                    }
+                }
+            }
         });
 
         utils.mountChart(document.getElementById("adminPriorityChart"), {
@@ -203,19 +226,42 @@
 
         const statusData = buildEmployeeStatusChart(assignedComplaints);
         utils.mountChart(document.getElementById("employeeStatusChart"), {
-            type: "line",
+            type: "pie",
             data: {
                 labels: Object.keys(statusData),
                 datasets: [{
-                    label: "Complaints",
                     data: Object.values(statusData),
-                    borderColor: "#6a5cff",
-                    backgroundColor: "rgba(106, 92, 255, 0.14)",
-                    tension: 0.4,
-                    fill: true
+                    backgroundColor: ["#6a5cff", "#ffcf76", "#63d7a1", "#7cccf8", "#ff8ca7", "#a78bfa"],
+                    borderColor: "#1a1a2e",
+                    borderWidth: 2,
+                    hoverOffset: 18
                 }]
             },
-            options: { maintainAspectRatio: false }
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                var label = context.label || "";
+                                var value = context.parsed || 0;
+                                var total = context.dataset.data.reduce(function (a, b) { return a + b; }, 0);
+                                var pct = total ? Math.round((value / total) * 100) : 0;
+                                return label + ": " + value + " (" + pct + "%)";
+                            }
+                        }
+                    },
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            color: "#ccc",
+                            padding: 14,
+                            usePointStyle: true,
+                            pointStyleWidth: 10
+                        }
+                    }
+                }
+            }
         });
     }
 
