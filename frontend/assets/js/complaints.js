@@ -50,7 +50,6 @@
         const detailsHref = window.CMS.session.resolve(`pages/user/details.html?id=${complaint._id}`);
         const assignButton = role === "admin" ? `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>` : "";
         const statusButton = role === "employee" ? `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>` : "";
-        const deleteButton = role === "user" && complaint.status === "Pending" ? `<button class="row-action-btn delete-btn" data-delete-id="${complaint._id}" title="Delete Complaint"><i class="bi bi-trash3"></i> Delete</button>` : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
         const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
         const statusCls = utils.statusClass(complaint.status);
@@ -74,7 +73,7 @@
             '  <div class="cc-actions">',
             `    <div class="row-actions">`,
             `      <a class="row-action-btn view-btn" href="${detailsHref}" title="View Details"><i class="bi bi-eye"></i> View</a>`,
-            `      ${assignButton}${statusButton}${deleteButton}`,
+            `      ${assignButton}${statusButton}`,
             '    </div>',
             '  </div>',
             '</div>'
@@ -363,40 +362,6 @@
         state.items = (await api.getMyComplaints()).data || [];
         renderTableState(state);
 
-        // Delete complaint handler
-        container.onclick = function (event) {
-            var deleteBtn = event.target.closest("[data-delete-id]");
-            if (!deleteBtn) {
-                return;
-            }
-
-            var deleteId = deleteBtn.getAttribute("data-delete-id");
-            var complaint = state.items.find(function (item) {
-                return item._id === deleteId;
-            });
-
-            utils.openModal([
-                '<div class="section-head"><div><h2>Delete Complaint</h2><p>This action cannot be undone.</p></div>',
-                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
-                '<div class="stack">',
-                `<p>Are you sure you want to delete <strong>${utils.escapeHtml(complaint ? complaint.title : "")}</strong>?</p>`,
-                '<div class="row-actions" style="justify-content:flex-end;gap:0.75rem;margin-top:1rem;">',
-                '<button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>',
-                `<button type="button" class="btn btn-primary" id="confirmDeleteBtn" style="background:#EF4444;border-color:#EF4444;">Delete</button>`,
-                '</div></div>'
-            ].join(""));
-
-            document.getElementById("confirmDeleteBtn").addEventListener("click", async function () {
-                try {
-                    await api.deleteComplaint(deleteId);
-                    utils.closeModal();
-                    utils.showToast("Complaint deleted successfully.", "success");
-                    await loadMyComplaintsPage();
-                } catch (err) {
-                    utils.showToast(err.message, "error");
-                }
-            });
-        };
     }
 
     function buildTimeline(complaint) {
@@ -440,9 +405,11 @@
             `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
             `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
             "</div>",
-            // Admin assign button — only shown when complaint is Pending and user is admin
+            // Admin assign button OR User delete button — only shown when complaint is Pending
             (currentUser && currentUser.role === "admin" && complaint.status === "Pending")
                 ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsAssignBtn"><i class="bi bi-person-plus"></i> Assign to Employee</button></div>'
+                : (currentUser && currentUser.role === "user" && complaint.status === "Pending")
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsDeleteBtn" style="background:#EF4444;border-color:#EF4444;"><i class="bi bi-trash3"></i> Delete Complaint</button></div>'
                 : '',
             "</section>",
             utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
@@ -495,6 +462,35 @@
                 } catch (err) {
                     utils.showToast(err.message, "error");
                 }
+            });
+        }
+
+        // Wire up user delete button on details page
+        var detailsDeleteBtn = document.getElementById("detailsDeleteBtn");
+        if (detailsDeleteBtn) {
+            detailsDeleteBtn.addEventListener("click", function () {
+                utils.openModal([
+                    '<div class="section-head"><div><h2>Delete Complaint</h2><p>This action cannot be undone.</p></div>',
+                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                    '<div class="stack">',
+                    `<p>Are you sure you want to delete <strong>${utils.escapeHtml(complaint.title)}</strong>?</p>`,
+                    '<div class="row-actions" style="justify-content:flex-end;gap:0.75rem;margin-top:1rem;">',
+                    '<button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>',
+                    `<button type="button" class="btn btn-primary" id="confirmDetailsDeleteBtn" style="background:#EF4444;border-color:#EF4444;">Delete</button>`,
+                    '</div></div>'
+                ].join(""));
+
+                document.getElementById("confirmDetailsDeleteBtn").addEventListener("click", async function () {
+                    try {
+                        await api.deleteComplaint(complaint._id);
+                        utils.closeModal();
+                        utils.showToast("Complaint deleted successfully.", "success");
+                        // Redirect back to my complaints page
+                        window.location.href = window.CMS.session.resolve("pages/user/dashboard.html");
+                    } catch (err) {
+                        utils.showToast(err.message, "error");
+                    }
+                });
             });
         }
     }
