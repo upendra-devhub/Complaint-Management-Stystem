@@ -109,7 +109,7 @@
                 labels: data.statusChart.labels,
                 datasets: [{
                     data: data.statusChart.data,
-                    backgroundColor: ["#6a5cff", "#ffcf76", "#63d7a1", "#7cccf8", "#ff8ca7", "#a78bfa"],
+                    backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"],
                     borderColor: "#1a1a2e",
                     borderWidth: 2,
                     hoverOffset: 18
@@ -135,7 +135,7 @@
                             color: "#ccc",
                             padding: 14,
                             usePointStyle: true,
-                            pointStyleWidth: 10
+                            pointStyle: "circle"
                         }
                     }
                 }
@@ -231,7 +231,7 @@
                 labels: Object.keys(statusData),
                 datasets: [{
                     data: Object.values(statusData),
-                    backgroundColor: ["#6a5cff", "#ffcf76", "#63d7a1", "#7cccf8", "#ff8ca7", "#a78bfa"],
+                    backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"],
                     borderColor: "#1a1a2e",
                     borderWidth: 2,
                     hoverOffset: 18
@@ -257,7 +257,7 @@
                             color: "#ccc",
                             padding: 14,
                             usePointStyle: true,
-                            pointStyleWidth: 10
+                            pointStyle: "circle"
                         }
                     }
                 }
