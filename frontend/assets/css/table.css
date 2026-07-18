@@ -6,22 +6,23 @@
     overflow: hidden;
 }
 
-/* ── Shared flex row for header + data rows ── */
+/* ── Shared grid row for header + data rows ── */
 .complaint-header,
 .complaint-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) 150px 140px 130px 160px;
     align-items: center;
     padding: 0 16px;
-    gap: 0;
+    gap: 0 8px;
 }
 
-/* ── Column sizing (flex-basis) ── */
-.cc-icon     { flex: 0 0 56px;  display: flex; align-items: center; justify-content: center; }
-.cc-info     { flex: 1 1 0;     min-width: 0; }
-.cc-dept     { flex: 0 0 150px; min-width: 0; overflow: hidden; padding-right: 8px; }
-.cc-status   { flex: 0 0 140px; min-width: 0; overflow: hidden; padding-right: 8px; }
-.cc-assigned { flex: 0 0 130px; min-width: 0; overflow: hidden; padding-right: 8px; }
-.cc-actions  { flex: 0 0 160px; display: flex; justify-content: flex-end; flex-shrink: 0; }
+/* ── Column overrides ── */
+.cc-icon     { display: flex; align-items: center; justify-content: center; }
+.cc-info     { overflow: hidden; }
+.cc-dept     { overflow: hidden; }
+.cc-status   { overflow: hidden; }
+.cc-assigned { overflow: hidden; }
+.cc-actions  { display: flex; justify-content: flex-end; }
 
 /* ── Header row ── */
 .complaint-header {
@@ -97,7 +98,7 @@
     flex-direction: column;
     gap: 2px;
     overflow: hidden;
-    padding-right: 16px;
+    padding-right: 8px;
 }
 
 .complaint-title {

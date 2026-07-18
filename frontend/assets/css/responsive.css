@@ -131,8 +131,8 @@
     }
 
     .complaint-row {
+        grid-template-columns: 1fr;
         align-items: flex-start;
-        flex-wrap: wrap;
     }
 
     .complaint-row-info {

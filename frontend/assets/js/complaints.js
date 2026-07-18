@@ -54,7 +54,12 @@
                 ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Already Assigned"><i class="bi bi-person-check"></i> Assigned</button>` 
                 : `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>`) 
             : "";
-        const statusButton = role === "employee" ? `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>` : "";
+        const isResolved = complaint.status === "Resolved";
+        const statusButton = role === "employee"
+            ? (isResolved
+                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Complaint is already resolved"><i class="bi bi-check-circle"></i> Resolved</button>`
+                : `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>`)
+            : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
         const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
         const statusCls = utils.statusClass(complaint.status);
@@ -411,11 +416,15 @@
             `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(complaint.department && complaint.department.name ? complaint.department.name : "No department")}</strong></div>`,
             `<div class="detail-tile"><span>Location</span><strong>${utils.escapeHtml(complaint.location)}</strong></div>`,
             "</div>",
-            // Admin assign button OR User delete button — only shown when complaint is Pending
+            // Admin assign button — only shown when complaint is Pending
+            // User delete button — only shown when complaint is Pending
+            // Employee update status button — shown when complaint is NOT Resolved
             (currentUser && currentUser.role === "admin" && complaint.status === "Pending")
                 ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsAssignBtn"><i class="bi bi-person-plus"></i> Assign to Employee</button></div>'
                 : (currentUser && currentUser.role === "user" && complaint.status === "Pending")
                 ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsDeleteBtn" style="background:#EF4444;border-color:#EF4444;"><i class="bi bi-trash3"></i> Delete Complaint</button></div>'
+                : (currentUser && currentUser.role === "employee" && complaint.status !== "Resolved")
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsUpdateStatusBtn"><i class="bi bi-arrow-up-circle"></i> Update Status</button></div>'
                 : '',
             "</section>",
             utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
@@ -495,6 +504,42 @@
                         window.location.href = window.CMS.session.resolve("pages/user/dashboard.html");
                     } catch (err) {
                         utils.showToast(err.message, "error");
+                    }
+                });
+            });
+        }
+
+        // Wire up employee update status button on details page
+        var detailsUpdateStatusBtn = document.getElementById("detailsUpdateStatusBtn");
+        if (detailsUpdateStatusBtn) {
+            detailsUpdateStatusBtn.addEventListener("click", function () {
+                var targetStatus = nextStatus(complaint.status);
+                if (!targetStatus) {
+                    utils.showToast("This complaint is already resolved.", "info");
+                    return;
+                }
+
+                utils.openModal([
+                    '<div class="section-head"><div><h2>Update Complaint Status</h2><p>Advance the complaint to the next stage.</p></div>',
+                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                    `<form id="detailsUpdateForm" class="form-grid"><div class="form-field"><label>Current complaint</label><input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
+                    `<div class="form-field"><label>Next status</label><input class="field-control" value="${utils.escapeHtml(targetStatus)}" disabled></div>`,
+                    '<div class="form-field"><label>Remark</label><textarea class="field-textarea" name="employeeRemark" placeholder="Add an optional update for the citizen."></textarea></div>',
+                    '<button type="submit" class="btn btn-primary">Save status</button></form>'
+                ].join(""));
+
+                document.getElementById("detailsUpdateForm").addEventListener("submit", async function (submitEvent) {
+                    submitEvent.preventDefault();
+                    try {
+                        await api.updateComplaintStatus(complaint._id, {
+                            status: targetStatus,
+                            employeeRemark: submitEvent.target.employeeRemark.value.trim()
+                        });
+                        utils.closeModal();
+                        utils.showToast("Complaint status updated.", "success");
+                        await loadDetailsPage();
+                    } catch (error) {
+                        utils.showToast(error.message, "error");
                     }
                 });
             });

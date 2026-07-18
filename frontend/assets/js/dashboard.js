@@ -179,6 +179,51 @@
                 }
             }
         });
+
+        // Employee Distribution per Department — horizontal bar chart
+        var empDistData = data.employeeDistributionChart || { labels: [], data: [] };
+        utils.mountChart(document.getElementById("adminEmployeeDistChart"), {
+            type: "bar",
+            data: {
+                labels: empDistData.labels,
+                datasets: [{
+                    label: "Employees",
+                    data: empDistData.data,
+                    backgroundColor: ["#818cf8", "#f472b6", "#34d399", "#fbbf24", "#60a5fa", "#a78bfa", "#fb923c"],
+                    maxBarThickness: 36,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: "#9ca3af"
+                        },
+                        grid: {
+                            color: "rgba(132, 141, 210, 0.08)"
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: "#9ca3af"
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
     }
 
     function buildEmployeePriorityChart(complaints) {

@@ -135,10 +135,40 @@ const getAdminDashboardService = async () => {
     };
 
     departmentStats.forEach((item) => {
-
         departmentChart.labels.push(item._id);
         departmentChart.data.push(item.count);
+    });
 
+
+    // Employee Distribution per Department
+
+    const employeeDistribution = await User.aggregate([
+        { $match: { role: "employee" } },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "dept"
+            }
+        },
+        { $unwind: { path: "$dept", preserveNullAndEmptyArrays: true } },
+        {
+            $group: {
+                _id: "$dept.name",
+                count: { $sum: 1 }
+            }
+        }
+    ]);
+
+    const employeeDistributionChart = {
+        labels: [],
+        data: []
+    };
+
+    employeeDistribution.forEach((item) => {
+        employeeDistributionChart.labels.push(item._id || "Unassigned");
+        employeeDistributionChart.data.push(item.count);
     });
 
     return {
@@ -154,6 +184,8 @@ const getAdminDashboardService = async () => {
         priorityChart,
 
         departmentChart,
+
+        employeeDistributionChart,
 
         recentComplaints
 
