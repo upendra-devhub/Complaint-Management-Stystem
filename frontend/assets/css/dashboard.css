@@ -570,7 +570,7 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
 }
 
 /* Compact complaint rows */
-.complaint-row {
+.recent-row {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -578,11 +578,11 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
   border-bottom: 1px solid rgba(126, 137, 208, 0.1);
 }
 
-.complaint-row:last-of-type {
+.recent-row:last-of-type {
   border-bottom: none;
 }
 
-.complaint-row-info {
+.recent-row-info {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -590,23 +590,23 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
   gap: 2px;
 }
 
-.complaint-row-info strong {
+.recent-row-info strong {
   font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.complaint-row-meta {
+.recent-row-meta {
   font-size: 0.82rem;
   color: var(--color-text-soft);
 }
 
-.complaint-row .badge {
+.recent-row .badge {
   flex-shrink: 0;
 }
 
-.complaint-row .btn-sm {
+.recent-row .btn-sm {
   flex-shrink: 0;
 }
 

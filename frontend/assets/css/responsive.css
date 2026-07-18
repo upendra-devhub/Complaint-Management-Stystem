@@ -135,11 +135,11 @@
         align-items: flex-start;
     }
 
-    .complaint-row-info {
+    .recent-row-info {
         width: 100%;
     }
 
-    .complaint-row-info strong {
+    .recent-row-info strong {
         white-space: normal;
     }
 

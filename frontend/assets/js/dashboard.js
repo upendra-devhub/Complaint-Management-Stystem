@@ -67,10 +67,10 @@
                 var detailsHref = window.CMS.session.resolve("pages/user/details.html?id=" + c._id);
                 var statusCls = utils.statusClass ? utils.statusClass(c.status) : (c.status || "pending").toLowerCase();
                 return [
-                    '<div class="complaint-row">',
-                    '<div class="complaint-row-info">',
+                    '<div class="recent-row">',
+                    '<div class="recent-row-info">',
                     '<strong>' + utils.escapeHtml(c.title) + '</strong>',
-                    '<span class="complaint-row-meta">' + utils.escapeHtml(c.complaintId || "") + ' &middot; ' + utils.escapeHtml(c.department && c.department.name ? c.department.name : "—") + '</span>',
+                    '<span class="recent-row-meta">' + utils.escapeHtml(c.complaintId || "") + ' &middot; ' + utils.escapeHtml(c.department && c.department.name ? c.department.name : "—") + '</span>',
                     '</div>',
                     '<span class="badge ' + statusCls + '">' + utils.escapeHtml(c.status || "Pending") + '</span>',
                     '<a class="btn btn-secondary btn-sm" href="' + detailsHref + '">View</a>',

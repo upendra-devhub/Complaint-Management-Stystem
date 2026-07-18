@@ -61,7 +61,7 @@
                 : `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>`)
             : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
-        const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
+        const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "--";
         const statusCls = utils.statusClass(complaint.status);
 
         return [
