@@ -18,10 +18,10 @@
 /* ── Column sizing (flex-basis) ── */
 .cc-icon     { flex: 0 0 56px;  display: flex; align-items: center; justify-content: center; }
 .cc-info     { flex: 1 1 0;     min-width: 0; }
-.cc-dept     { flex: 0 0 130px; min-width: 0; }
-.cc-status   { flex: 0 0 130px; min-width: 0; }
-.cc-assigned { flex: 0 0 130px; min-width: 0; }
-.cc-actions  { flex: 0 0 140px; display: flex; justify-content: flex-end; }
+.cc-dept     { flex: 0 0 150px; min-width: 0; padding-right: 8px; }
+.cc-status   { flex: 0 0 140px; min-width: 0; padding-right: 8px; }
+.cc-assigned { flex: 0 0 130px; min-width: 0; padding-right: 8px; }
+.cc-actions  { flex: 0 0 160px; display: flex; justify-content: flex-end; }
 
 /* ── Header row ── */
 .complaint-header {
@@ -38,8 +38,8 @@
 
 /* ── Data row ── */
 .complaint-row {
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid rgba(126, 137, 208, 0.08);
     transition: background 0.2s ease;
     position: relative;
@@ -95,7 +95,7 @@
 .cc-info {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     overflow: hidden;
     padding-right: 16px;
 }

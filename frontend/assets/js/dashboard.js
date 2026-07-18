@@ -113,12 +113,13 @@
                         var colors = { "Pending": "#EF4444", "Resolved": "#10B981", "In Progress": "#F59E0B", "Assigned": "#3B82F6" };
                         return colors[label] || "#8B5CF6";
                     }),
-                    borderColor: "#1a1a2e",
+                    borderColor: "#ffffff",
                     borderWidth: 2,
                     hoverOffset: 18
                 }]
             },
             options: {
+                radius: "98%",
                 maintainAspectRatio: false,
                 plugins: {
                     tooltip: {
@@ -240,12 +241,13 @@
                         var colors = { "Pending": "#EF4444", "Resolved": "#10B981", "In Progress": "#F59E0B", "Assigned": "#3B82F6" };
                         return colors[label] || "#8B5CF6";
                     }),
-                    borderColor: "#1a1a2e",
+                    borderColor: "#ffffff",
                     borderWidth: 2,
                     hoverOffset: 18
                 }]
             },
             options: {
+                radius: "98%",
                 maintainAspectRatio: false,
                 plugins: {
                     tooltip: {

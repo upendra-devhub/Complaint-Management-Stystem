@@ -48,7 +48,12 @@
 
     function complaintRow(complaint, role) {
         const detailsHref = window.CMS.session.resolve(`pages/user/details.html?id=${complaint._id}`);
-        const assignButton = role === "admin" ? `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>` : "";
+        const isAssigned = complaint.assignedTo && complaint.assignedTo.name;
+        const assignButton = role === "admin" 
+            ? (isAssigned 
+                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Already Assigned"><i class="bi bi-person-check"></i> Assigned</button>` 
+                : `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>`) 
+            : "";
         const statusButton = role === "employee" ? `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>` : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
         const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "Unassigned";
@@ -61,7 +66,8 @@
             `    <span class="complaint-title">${utils.escapeHtml(complaint.title)}</span>`,
             '    <div class="complaint-meta-line">',
             `      <span class="complaint-id"><i class="bi bi-hash"></i>${utils.escapeHtml(complaint.complaintId)}</span>`,
-            '      <span class="complaint-sep">·</span>',
+            '    </div>',
+            '    <div class="complaint-meta-line">',
             `      <span class="complaint-date"><i class="bi bi-calendar3"></i>${utils.formatDate(complaint.createdAt)}</span>`,
             '      <span class="complaint-sep">·</span>',
             `      <span class="complaint-location"><i class="bi bi-geo-alt"></i>${utils.escapeHtml(complaint.location)}</span>`,
