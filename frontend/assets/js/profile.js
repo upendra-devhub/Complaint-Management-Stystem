@@ -72,7 +72,7 @@
         root.innerHTML = [
             '<section class="two-column">',
             '<article class="panel-card stack">',
-            '<div class="split"><div class="split"><div class="avatar large">' + utils.getInitials(profile.name) + '</div>',
+            '<div class="split"><div class="split"><div class="avatar large">' + (profile.profileImage ? `<img src="${utils.escapeHtml(profile.profileImage)}" alt="Avatar">` : utils.getInitials(profile.name)) + '</div>',
             `<div><h1>${utils.escapeHtml(profile.name || "User")}</h1><p>${utils.escapeHtml(profile.role || "Role unavailable")}</p></div></div>`,
             '<span class="chip">Live profile</span></div>',
             '<p>Your profile is now backed by the backend API. You can update contact details here and optionally change your password.</p>',

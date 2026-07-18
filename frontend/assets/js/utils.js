@@ -225,7 +225,7 @@
             '<input type="search" placeholder="Search complaints, departments, employees..." data-global-search>',
             "</label>",
             '<div class="topbar-user-menu" data-user-menu>',
-            `<button type="button" class="avatar-btn"><div class="avatar">${getInitials(user.name)}</div></button>`,
+            `<button type="button" class="avatar-btn"><div class="avatar">${user.profileImage ? `<img src="${escapeHtml(user.profileImage)}" alt="Avatar">` : getInitials(user.name)}</div></button>`,
             '<div class="user-dropdown">',
             '<div class="dropdown-header">',
             `<strong>${escapeHtml(user.name || "Guest User")}</strong>`,
