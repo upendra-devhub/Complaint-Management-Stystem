@@ -26,8 +26,6 @@
             `<input class="field-control" id="email" name="email" type="email" value="${utils.escapeHtml(profile.email || "")}" required></div>`,
             '<div class="form-field"><label for="address">Address</label>',
             `<input class="field-control" id="address" name="address" type="text" value="${utils.escapeHtml(profile.address || "")}"></div>`,
-            '<div class="form-field"><label for="profileImage">Profile Image URL</label>',
-            `<input class="field-control" id="profileImage" name="profileImage" type="url" value="${utils.escapeHtml(profile.profileImage || "")}" placeholder="https://..."></div>`,
             '<div class="form-row">',
             '<div class="form-field"><label for="currentPassword">Current Password</label>',
             '<input class="field-control" id="currentPassword" name="currentPassword" type="password" placeholder="Only needed when changing password"></div>',
@@ -72,14 +70,12 @@
         root.innerHTML = [
             '<section class="two-column">',
             '<article class="panel-card stack">',
-            '<div class="split"><div class="split"><div class="avatar large">' + (profile.profileImage ? `<img src="${utils.escapeHtml(profile.profileImage)}" alt="Avatar">` : utils.getInitials(profile.name)) + '</div>',
-            `<div><h1>${utils.escapeHtml(profile.name || "User")}</h1><p>${utils.escapeHtml(profile.role || "Role unavailable")}</p></div></div>`,
-            '<span class="chip">Live profile</span></div>',
-            '<p>Your profile is now backed by the backend API. You can update contact details here and optionally change your password.</p>',
+            '<div class="split"><div class="split"><div class="avatar large">' + utils.getInitials(profile.name) + '</div>',
+            `<div><h1>${utils.escapeHtml(profile.name || "User")}</h1><p>${utils.escapeHtml(profile.role || "Role unavailable")}</p></div></div></div>`,
             '<div class="details-grid">',
             `<div class="detail-tile"><span>Email</span><strong>${utils.escapeHtml(profile.email || "Not available")}</strong></div>`,
             `<div class="detail-tile"><span>Phone</span><strong>${utils.escapeHtml(profile.phone || "Not available")}</strong></div>`,
-            `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(profile.department && profile.department.name ? profile.department.name : "Not assigned")}</strong></div>`,
+            (profile.role === "employee" ? `<div class="detail-tile"><span>Department</span><strong>${utils.escapeHtml(profile.department && profile.department.name ? profile.department.name : "Not assigned")}</strong></div>` : ""),
             `<div class="detail-tile"><span>Address</span><strong>${utils.escapeHtml(profile.address || "Not added")}</strong></div>`,
             '</div>',
             profileForm(profile),
@@ -100,8 +96,7 @@
                     name: form.name.value.trim(),
                     email: form.email.value.trim(),
                     phone: form.phone.value.trim(),
-                    address: form.address.value.trim(),
-                    profileImage: form.profileImage.value.trim()
+                    address: form.address.value.trim()
                 };
 
                 if (form.currentPassword.value.trim() || form.newPassword.value.trim()) {
