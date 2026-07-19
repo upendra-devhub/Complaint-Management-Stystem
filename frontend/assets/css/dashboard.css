@@ -158,12 +158,13 @@ body[data-page="departments"] .page-content {
 
 .two-column {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.95fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: 24px;
 }
 
 .two-column > .panel-card {
   min-width: 0;
+  overflow: hidden;
 }
 
 body[data-page="employees"] .two-column {
@@ -580,6 +581,7 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
   gap: 14px;
   padding: 14px 0;
   border-bottom: 1px solid rgba(126, 137, 208, 0.1);
+  overflow: hidden;
 }
 
 .recent-row:last-of-type {
@@ -604,6 +606,9 @@ body[data-page="departments"] .department-directory-card #departmentList::-webki
 .recent-row-meta {
   font-size: 0.82rem;
   color: var(--color-text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .recent-row .badge {
