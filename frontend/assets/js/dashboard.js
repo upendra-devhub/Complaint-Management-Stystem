@@ -81,9 +81,9 @@
             var paginationHtml = "";
             if (totalPages > 1) {
                 paginationHtml = '<div class="pagination-controls">';
-                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-prev ' + (adminPage === 0 ? 'disabled' : '') + '><i class="ph ph-chevron-left"></i></button>';
+                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-prev ' + (adminPage === 0 ? 'disabled' : '') + '><i class="bi bi-chevron-left"></i></button>';
                 paginationHtml += '<span class="pagination-info">' + (adminPage + 1) + ' / ' + totalPages + '</span>';
-                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-next ' + (adminPage >= totalPages - 1 ? 'disabled' : '') + '><i class="ph ph-chevron-right"></i></button>';
+                paginationHtml += '<button class="btn btn-secondary btn-sm" data-admin-next ' + (adminPage >= totalPages - 1 ? 'disabled' : '') + '><i class="bi bi-chevron-right"></i></button>';
                 paginationHtml += '</div>';
             }
 
@@ -329,7 +329,7 @@
             .map(function (complaint) {
                 return [
                     '<div class="mini-item">',
-                    '<div class="mini-icon"><i class="ph ph-bell"></i></div>',
+                    '<div class="mini-icon"><i class="bi bi-bell"></i></div>',
                     `<div><strong>${utils.escapeHtml(complaint.title)}</strong>`,
                     `<p>Status is ${utils.escapeHtml(complaint.status)}</p></div>`,
                     `<small>${utils.relativeTime(complaint.updatedAt || complaint.resolvedAt || complaint.createdAt)}</small>`,

@@ -7,14 +7,14 @@
     <title>Complaint Management System | Login</title>
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/auth.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="auth-body">
     <div id="toast-root"></div>
     <main class="auth-shell">
         <section class="auth-hero" style="--auth-bg:url('../../assets/images/auth-login-bg.png')">
             <div class="auth-brand">
-                <div class="brand-mark"><i class="ph ph-shield-check"></i></div>
+                <div class="brand-mark"><i class="bi bi-shield-check"></i></div>
                 <div class="brand-copy"><strong>Complaint</strong> <span class="muted">Management System</span></div>
             </div>
             
@@ -22,7 +22,7 @@
                 <div class="glass-orb orb-1"></div>
                 <div class="glass-orb orb-2"></div>
                 <div class="glass-card floating-stat">
-                    <div class="icon-box"><i class="ph ph-megaphone"></i></div>
+                    <div class="icon-box"><i class="bi bi-megaphone"></i></div>
                     <div class="stat-text">
                         <h4>Your Voice Matters</h4>
                         <p>Turning complaints into quick action</p>
@@ -46,29 +46,29 @@
                     <div class="form-field">
                         <label for="email">Email Address</label>
                         <div class="field-addon">
-                            <i class="ph ph-envelope"></i>
+                            <i class="bi bi-envelope"></i>
                             <input class="field-control" id="email" name="email" type="email" placeholder="Enter your email" autocomplete="email" required>
                         </div>
                     </div>
                     <div class="form-field">
                         <label for="password">Password</label>
                         <div class="field-addon">
-                            <i class="ph ph-lock"></i>
+                            <i class="bi bi-lock"></i>
                             <input class="field-control" id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
-                            <i class="ph ph-eye-slash toggle-password" data-target="password" role="button" tabindex="0" aria-label="Toggle password visibility"></i>
+                            <i class="bi bi-eye-slash toggle-password" data-target="password" role="button" tabindex="0" aria-label="Toggle password visibility"></i>
                         </div>
                     </div>
                     <div class="checkbox-row">
                         <label class="check"><input type="checkbox">Remember me</label>
                         <a class="inline-link" href="#" data-forgot-password>Forgot Password?</a>
                     </div>
-                    <button class="btn btn-primary" type="submit">Login <i class="ph ph-arrow-right"></i></button>
+                    <button class="btn btn-primary" type="submit">Login <i class="bi bi-arrow-right"></i></button>
                 </form>
                 <div class="auth-divider">or continue with</div>
                 <div class="social-row">
-                    <button class="social-chip google" type="button" aria-label="Login with Google"><i class="ph ph-google"></i></button>
-                    <button class="social-chip microsoft" type="button" aria-label="Login with Microsoft"><i class="ph ph-microsoft"></i></button>
-                    <button class="social-chip apple" type="button" aria-label="Login with Apple"><i class="ph ph-apple"></i></button>
+                    <button class="social-chip google" type="button" aria-label="Login with Google"><i class="bi bi-google"></i></button>
+                    <button class="social-chip microsoft" type="button" aria-label="Login with Microsoft"><i class="bi bi-microsoft"></i></button>
+                    <button class="social-chip apple" type="button" aria-label="Login with Apple"><i class="bi bi-apple"></i></button>
                 </div>
                 <div class="auth-links">
                     <p>Don't have an account? <a href="register.html">Register</a></p>
@@ -79,6 +79,5 @@
     <script src="../../assets/js/api.js"></script>
     <script src="../../assets/js/utils.js"></script>
     <script src="../../assets/js/auth.js"></script>
-<script src="../../assets/js/animations.js"></script>
 </body>
 </html>
