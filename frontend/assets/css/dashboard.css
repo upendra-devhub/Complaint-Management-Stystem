@@ -162,6 +162,10 @@ body[data-page="departments"] .page-content {
   gap: 24px;
 }
 
+.two-column > .panel-card {
+  min-width: 0;
+}
+
 body[data-page="employees"] .two-column {
   flex: 1;
   min-height: 0;
