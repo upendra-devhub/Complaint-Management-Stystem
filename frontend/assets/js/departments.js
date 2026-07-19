@@ -21,7 +21,7 @@
                 '</div>',
                 '</div>',
                 '<div class="department-tile-details">',
-                '<div class="department-tile-row"><i class="ph ph-calendar3"></i><span>' + utils.formatDate(department.createdAt) + '</span></div>',
+                '<div class="department-tile-row"><i class="bi bi-calendar3"></i><span>' + utils.formatDate(department.createdAt) + '</span></div>',
                 '</div>',
                 '<div class="department-tile-actions">',
                 '<button class="btn btn-secondary" data-edit-id="' + department._id + '">Edit</button>',

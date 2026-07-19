@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/auth.css">
 
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="auth-body">
     <div id="toast-root"></div>
     <main class="auth-shell">
         <section class="auth-hero" style="--auth-bg:url('../../assets/images/auth-register-bg.png')">
             <div class="auth-brand">
-                <div class="brand-mark"><i class="ph ph-shield-check"></i></div>
+                <div class="brand-mark"><i class="bi bi-shield-check"></i></div>
                 <div class="brand-copy"><strong>Complaint</strong><span>Management System</span></div>
             </div>
             <div class="auth-hero-content">
@@ -24,22 +24,22 @@
             </div>
             <div class="auth-highlights">
                 <article class="auth-highlight">
-                    <i class="ph ph-pin-map"></i>
+                    <i class="bi bi-pin-map"></i>
                     <div><strong>Location Aware</strong><p>Include the exact location so teams can route issues faster.</p></div>
                 </article>
                 <article class="auth-highlight">
-                    <i class="ph ph-image"></i>
+                    <i class="bi bi-image"></i>
                     <div><strong>Image Evidence</strong><p>Support complaints with photos when creating new issues.</p></div>
                 </article>
                 <article class="auth-highlight">
-                    <i class="ph ph-bell"></i>
+                    <i class="bi bi-bell"></i>
                     <div><strong>Track Progress</strong><p>Get real-time updates about your complaints.</p></div>
                 </article>
             </div>
         </section>
         <section class="auth-panel">
             <div class="auth-panel-inner">
-                <!-- <div class="auth-icon"><i class="ph ph-person-plus"></i></div> -->
+                <!-- <div class="auth-icon"><i class="bi bi-person-plus"></i></div> -->
                 <div class="auth-header">
                     <h2>Create your account</h2>
                     <p>Fill in the details below to start using the platform.</p>
@@ -49,14 +49,14 @@
                         <div class="form-field">
                             <label for="name">Full Name</label>
                             <div class="field-addon">
-                                <i class="ph ph-user"></i>
+                                <i class="bi bi-person"></i>
                                 <input class="field-control" id="name" name="name" type="text" placeholder="Your full name" required>
                             </div>
                         </div>
                         <div class="form-field">
                             <label for="phone">Phone Number</label>
                             <div class="field-addon">
-                                <i class="ph ph-telephone"></i>
+                                <i class="bi bi-telephone"></i>
                                 <input class="field-control" id="phone" name="phone" type="tel" placeholder="Your phone number" required>
                             </div>
                         </div>
@@ -64,14 +64,14 @@
                     <div class="form-field">
                         <label for="email">Email Address</label>
                         <div class="field-addon">
-                            <i class="ph ph-envelope"></i>
+                            <i class="bi bi-envelope"></i>
                             <input class="field-control" id="email" name="email" type="email" placeholder="Enter your email" required>
                         </div>
                     </div>
                     <div class="form-field">
                         <label for="address">Address</label>
                         <div class="field-addon">
-                            <i class="ph ph-map-pin"></i>
+                            <i class="bi bi-geo-alt"></i>
                             <input class="field-control" id="address" name="address" type="text" placeholder="Enter your address">
                         </div>
                     </div>
@@ -79,22 +79,22 @@
                         <div class="form-field">
                             <label for="password">Password</label>
                             <div class="field-addon">
-                                <i class="ph ph-lock"></i>
+                                <i class="bi bi-lock"></i>
                                 <input class="field-control" id="password" name="password" type="password" placeholder="Create password" required>
-                                <i class="ph ph-eye-slash toggle-password" data-target="password"></i>
+                                <i class="bi bi-eye-slash toggle-password" data-target="password"></i>
                             </div>
                         </div>
                         <div class="form-field">
                             <label for="confirmPassword">Confirm Password</label>
                             <div class="field-addon">
-                                <i class="ph ph-lock"></i>
+                                <i class="bi bi-lock"></i>
                                 <input class="field-control" id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm password" required>
-                                <i class="ph ph-eye-slash toggle-password" data-target="confirmPassword"></i>
+                                <i class="bi bi-eye-slash toggle-password" data-target="confirmPassword"></i>
                             </div>
                         </div>
                     </div>
                     <label class="check"><input type="checkbox" required>I agree to the Terms &amp; Conditions</label>
-                    <button class="btn btn-primary" type="submit">Register <i class="ph ph-arrow-right"></i></button>
+                    <button class="btn btn-primary" type="submit">Register <i class="bi bi-arrow-right"></i></button>
                 </form>
                 <div class="auth-links">
                     <p>Already have an account? <a href="login.html">Login</a></p>
@@ -105,6 +105,5 @@
     <script src="../../assets/js/api.js"></script>
     <script src="../../assets/js/utils.js"></script>
     <script src="../../assets/js/auth.js"></script>
-<script src="../../assets/js/animations.js"></script>
 </body>
 </html>
