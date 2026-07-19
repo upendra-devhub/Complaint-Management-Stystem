@@ -51,14 +51,14 @@
         const isAssigned = complaint.assignedTo && complaint.assignedTo.name;
         const assignButton = role === "admin" 
             ? (isAssigned 
-                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Already Assigned"><i class="bi bi-person-check"></i> Assigned</button>` 
-                : `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="bi bi-person-plus"></i> Assign</button>`) 
+                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Already Assigned"><i class="ph ph-person-check"></i> Assigned</button>` 
+                : `<button class="row-action-btn" data-assign-id="${complaint._id}" title="Assign"><i class="ph ph-person-plus"></i> Assign</button>`) 
             : "";
         const isResolved = complaint.status === "Resolved";
         const statusButton = role === "employee"
             ? (isResolved
-                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Complaint is already resolved"><i class="bi bi-check-circle"></i> Resolved</button>`
-                : `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="bi bi-arrow-up-circle"></i> Update</button>`)
+                ? `<button class="row-action-btn" disabled style="text-decoration: line-through; cursor: not-allowed; opacity: 0.6;" title="Complaint is already resolved"><i class="ph ph-check-circle"></i> Resolved</button>`
+                : `<button class="row-action-btn" data-update-id="${complaint._id}" title="Update Status"><i class="ph ph-arrow-up-circle"></i> Update</button>`)
             : "";
         const departmentName = complaint.department && complaint.department.name ? complaint.department.name : "No department";
         const assignedName = complaint.assignedTo && complaint.assignedTo.name ? complaint.assignedTo.name : "--";
@@ -70,20 +70,20 @@
             '  <div class="cc-info">',
             `    <span class="complaint-title">${utils.escapeHtml(complaint.title)}</span>`,
             '    <div class="complaint-meta-line">',
-            `      <span class="complaint-id"><i class="bi bi-hash"></i>${utils.escapeHtml(complaint.complaintId)}</span>`,
+            `      <span class="complaint-id"><i class="ph ph-hash"></i>${utils.escapeHtml(complaint.complaintId)}</span>`,
             '    </div>',
             '    <div class="complaint-meta-line">',
-            `      <span class="complaint-date"><i class="bi bi-calendar3"></i>${utils.formatDate(complaint.createdAt)}</span>`,
+            `      <span class="complaint-date"><i class="ph ph-calendar3"></i>${utils.formatDate(complaint.createdAt)}</span>`,
             '      <span class="complaint-sep">·</span>',
-            `      <span class="complaint-location"><i class="bi bi-geo-alt"></i>${utils.escapeHtml(complaint.location)}</span>`,
+            `      <span class="complaint-location"><i class="ph ph-map-pin"></i>${utils.escapeHtml(complaint.location)}</span>`,
             '    </div>',
             '  </div>',
-            `  <div class="cc-dept"><span class="complaint-dept"><i class="bi bi-building"></i>${utils.escapeHtml(departmentName)}</span></div>`,
+            `  <div class="cc-dept"><span class="complaint-dept"><i class="ph ph-buildings"></i>${utils.escapeHtml(departmentName)}</span></div>`,
             `  <div class="cc-status"><span class="status-pill ${statusCls}"><i class="bi ${statusIcon(complaint.status)}"></i>${utils.escapeHtml(complaint.status)}</span></div>`,
-            `  <div class="cc-assigned"><span class="complaint-assigned"><i class="bi bi-person"></i>${utils.escapeHtml(assignedName)}</span></div>`,
+            `  <div class="cc-assigned"><span class="complaint-assigned"><i class="ph ph-user"></i>${utils.escapeHtml(assignedName)}</span></div>`,
             '  <div class="cc-actions">',
             `    <div class="row-actions">`,
-            `      <a class="row-action-btn view-btn" href="${detailsHref}" title="View Details"><i class="bi bi-eye"></i> View</a>`,
+            `      <a class="row-action-btn view-btn" href="${detailsHref}" title="View Details"><i class="ph ph-eye"></i> View</a>`,
             `      ${assignButton}${statusButton}`,
             '    </div>',
             '  </div>',
@@ -110,7 +110,7 @@
 
         var buttons = [];
         buttons.push(
-            '<button class="pagination-btn' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '" data-page-action="prev" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '><i class="bi bi-chevron-left"></i></button>'
+            '<button class="pagination-btn' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '" data-page-action="prev" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === 1 ? ' disabled' : '') + '><i class="ph ph-chevron-left"></i></button>'
         );
 
         for (var i = 1; i <= paginationInfo.totalPages; i++) {
@@ -120,7 +120,7 @@
         }
 
         buttons.push(
-            '<button class="pagination-btn' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '" data-page-action="next" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '><i class="bi bi-chevron-right"></i></button>'
+            '<button class="pagination-btn' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '" data-page-action="next" data-state-key="' + stateKey + '"' + (paginationInfo.currentPage === paginationInfo.totalPages ? ' disabled' : '') + '><i class="ph ph-chevron-right"></i></button>'
         );
 
         return [
@@ -290,7 +290,7 @@
                     '<div class="preview-card">',
                     '<div class="preview-card-img-wrap">',
                     `<img src="${URL.createObjectURL(file)}" alt="${utils.escapeHtml(file.name)}">`,
-                    `<button type="button" class="preview-remove-btn" data-remove-index="${index}" title="Remove image"><i class="bi bi-x-lg"></i></button>`,
+                    `<button type="button" class="preview-remove-btn" data-remove-index="${index}" title="Remove image"><i class="ph ph-x"></i></button>`,
                     '</div>',
                     `<span>${utils.escapeHtml(file.name)}</span>`,
                     "</div>"
@@ -335,7 +335,7 @@
             event.preventDefault();
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> Submitting...';
+            submitButton.innerHTML = '<i class="ph ph-arrow-repeat"></i> Submitting...';
 
             try {
                 const formData = new FormData();
@@ -357,7 +357,7 @@
                 utils.showToast(error.message, "error");
             } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Submit Complaint <i class="bi bi-arrow-right"></i>';
+                submitButton.innerHTML = 'Submit Complaint <i class="ph ph-arrow-right"></i>';
             }
         });
     }
@@ -420,11 +420,11 @@
             // User delete button — only shown when complaint is Pending
             // Employee update status button — shown when complaint is NOT Resolved
             (currentUser && currentUser.role === "admin" && complaint.status === "Pending")
-                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsAssignBtn"><i class="bi bi-person-plus"></i> Assign to Employee</button></div>'
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsAssignBtn"><i class="ph ph-person-plus"></i> Assign to Employee</button></div>'
                 : (currentUser && currentUser.role === "user" && complaint.status === "Pending")
-                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsDeleteBtn" style="background:#EF4444;border-color:#EF4444;"><i class="bi bi-trash3"></i> Delete Complaint</button></div>'
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsDeleteBtn" style="background:#EF4444;border-color:#EF4444;"><i class="ph ph-trash3"></i> Delete Complaint</button></div>'
                 : (currentUser && currentUser.role === "employee" && complaint.status !== "Resolved")
-                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsUpdateStatusBtn"><i class="bi bi-arrow-up-circle"></i> Update Status</button></div>'
+                ? '<div class="detail-actions" style="margin-top:1rem;"><button class="btn btn-primary" id="detailsUpdateStatusBtn"><i class="ph ph-arrow-up-circle"></i> Update Status</button></div>'
                 : '',
             "</section>",
             utils.renderStatusTracker(complaint, { liveLabel: "Live complaint journey" }),
@@ -452,7 +452,7 @@
 
                     utils.openModal([
                         '<div class="section-head"><div><h2>Assign Complaint</h2><p>Select an employee from the same department.</p></div>',
-                        '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                        '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="ph ph-x"></i></button></div>',
                         `<form id="detailsAssignForm" class="form-grid"><input type="hidden" name="complaintId" value="${complaint._id}">`,
                         '<div class="form-field"><label>Complaint</label>',
                         `<input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
@@ -486,7 +486,7 @@
             detailsDeleteBtn.addEventListener("click", function () {
                 utils.openModal([
                     '<div class="section-head"><div><h2>Delete Complaint</h2><p>This action cannot be undone.</p></div>',
-                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="ph ph-x"></i></button></div>',
                     '<div class="stack">',
                     `<p>Are you sure you want to delete <strong>${utils.escapeHtml(complaint.title)}</strong>?</p>`,
                     '<div class="row-actions" style="justify-content:flex-end;gap:0.75rem;margin-top:1rem;">',
@@ -521,7 +521,7 @@
 
                 utils.openModal([
                     '<div class="section-head"><div><h2>Update Complaint Status</h2><p>Advance the complaint to the next stage.</p></div>',
-                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                    '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="ph ph-x"></i></button></div>',
                     `<form id="detailsUpdateForm" class="form-grid"><div class="form-field"><label>Current complaint</label><input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
                     `<div class="form-field"><label>Next status</label><input class="field-control" value="${utils.escapeHtml(targetStatus)}" disabled></div>`,
                     '<div class="form-field"><label>Remark</label><textarea class="field-textarea" name="employeeRemark" placeholder="Add an optional update for the citizen."></textarea></div>',
@@ -584,7 +584,7 @@
 
             utils.openModal([
                 '<div class="section-head"><div><h2>Assign Complaint</h2><p>Select an employee from the same department.</p></div>',
-                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="ph ph-x"></i></button></div>',
                 `<form id="assignComplaintForm" class="form-grid"><input type="hidden" name="complaintId" value="${complaint._id}">`,
                 '<div class="form-field"><label>Complaint</label>',
                 `<input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
@@ -648,7 +648,7 @@
 
             utils.openModal([
                 '<div class="section-head"><div><h2>Update Complaint Status</h2><p>Advance the complaint through the backend-supported workflow.</p></div>',
-                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="bi bi-x-lg"></i></button></div>',
+                '<button type="button" class="btn btn-secondary icon-btn" data-close-modal><i class="ph ph-x"></i></button></div>',
                 `<form id="updateComplaintForm" class="form-grid"><div class="form-field"><label>Current complaint</label><input class="field-control" value="${utils.escapeHtml(complaint.title)}" disabled></div>`,
                 `<div class="form-field"><label>Next status</label><input class="field-control" value="${utils.escapeHtml(targetStatus)}" disabled></div>`,
                 '<div class="form-field"><label>Remark</label><textarea class="field-textarea" name="employeeRemark" placeholder="Add an optional update for the citizen."></textarea></div>',

@@ -202,7 +202,7 @@
 
         qs(".app-sidebar").innerHTML = [
             '<div class="brand">',
-            '<div class="brand-mark"><i class="bi bi-shield-check"></i></div>',
+            '<div class="brand-mark"><i class="ph ph-shield-check"></i></div>',
             '<div class="brand-copy"><strong>Complaint</strong><span>Management System</span></div>',
             "</div>",
             `<nav class="nav-stack">${items}</nav>`,
@@ -219,9 +219,9 @@
         const profileLink = resolvePage(currentRole, "profile");
         qs(".topbar").innerHTML = [
             '<button type="button" class="btn btn-secondary icon-btn menu-toggle" data-menu-toggle>',
-            '<i class="bi bi-list"></i></button>',
+            '<i class="ph ph-list"></i></button>',
             '<label class="search-shell">',
-            '<i class="bi bi-search"></i>',
+            '<i class="ph ph-magnifying-glass"></i>',
             '<input type="search" placeholder="Search complaints, departments, employees..." data-global-search>',
             "</label>",
             '<div class="topbar-user-menu" data-user-menu>',
@@ -231,8 +231,8 @@
             `<strong>${escapeHtml(user.name || "Guest User")}</strong>`,
             `<p>${escapeHtml(user.role || currentRole)}</p>`,
             '</div>',
-            `<a class="dropdown-item" href="${profileLink}"><i class="bi bi-person"></i> Profile</a>`,
-            '<button class="dropdown-item text-danger" type="button" data-logout><i class="bi bi-box-arrow-left"></i> Logout</button>',
+            `<a class="dropdown-item" href="${profileLink}"><i class="ph ph-user"></i> Profile</a>`,
+            '<button class="dropdown-item text-danger" type="button" data-logout><i class="ph ph-box-arrow-left"></i> Logout</button>',
             '</div>',
             "</div>"
         ].join("");
@@ -333,7 +333,7 @@
     function complaintCard(complaint, actionsHtml) {
         return [
             '<article class="complaint-card">',
-            '<div class="complaint-card-icon"><i class="bi bi-clipboard-data"></i></div>',
+            '<div class="complaint-card-icon"><i class="ph ph-clipboard-data"></i></div>',
             '<div class="complaint-card-content">',
             `<h3>${escapeHtml(complaint.title)}</h3>`,
             `<div class="complaint-meta"><span>${escapeHtml(complaint.complaintId || "")}</span>`,
