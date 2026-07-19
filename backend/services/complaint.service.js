@@ -1,8 +1,5 @@
 // Complaint service database operations
 
-
-
-
 const Complaint=require('../models/Complaint');
 const Department=require('../models/Department');
 

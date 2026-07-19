@@ -58,6 +58,7 @@
                 form.address.value = employee.address || "";
                 await fillDepartmentOptions(form.department, employee.department && employee.department._id);
                 form.password.closest(".form-field").classList.add("hidden");
+                form.password.required = false;
                 form.querySelector("[data-submit-label]").textContent = "Update Employee";
             }
 
@@ -110,6 +111,7 @@
                 form.reset();
                 form.employeeId.value = "";
                 form.password.closest(".form-field").classList.remove("hidden");
+                form.password.required = true;
                 form.querySelector("[data-submit-label]").textContent = "Create Employee";
                 loadEmployees();
             } catch (error) {
