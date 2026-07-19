@@ -1,6 +1,6 @@
 .form-grid {
     display: grid;
-    gap: 18px;
+    gap: 20px;
 }
 
 .form-row {
@@ -15,25 +15,27 @@
 }
 
 .form-field label {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-text);
+    font-size: 0.9rem;
 }
 
 .field-control,
 .field-select,
 .field-textarea {
-    min-height: 50px;
+    min-height: 44px;
     width: 100%;
     padding: 0 16px;
-    border-radius: 16px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.88);
+    background: var(--color-canvas);
     color: var(--color-text);
-    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    font-size: 0.95rem;
+    transition: border-color var(--transition), background var(--transition);
 }
 
 .field-textarea {
-    min-height: 140px;
+    min-height: 120px;
     padding: 14px 16px;
     resize: vertical;
 }
@@ -41,9 +43,9 @@
 .field-control:focus,
 .field-select:focus,
 .field-textarea:focus {
-    border-color: rgba(106, 92, 255, 0.38);
-    box-shadow: 0 0 0 4px rgba(106, 92, 255, 0.12);
-    background: #fff;
+    border-color: var(--color-text);
+    background: var(--color-surface);
+    outline: none;
 }
 
 .field-addon {
@@ -55,11 +57,11 @@
     top: 50%;
     left: 16px;
     transform: translateY(-50%);
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
 }
 
 .field-addon .field-control {
-    padding-left: 46px;
+    padding-left: 42px;
 }
 
 .field-addon .toggle-password {
@@ -68,10 +70,9 @@
     cursor: pointer;
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
+    transition: opacity var(--transition);
 }
 
-/* Hide toggle when input is empty */
 .field-control:placeholder-shown + .toggle-password {
     opacity: 0;
     visibility: hidden;
@@ -91,36 +92,44 @@
     align-items: center;
     gap: 10px;
     color: var(--color-text-soft);
+    font-size: 0.9rem;
 }
 
 .check input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-text);
 }
 
 .helper-text {
-    font-size: 0.9rem;
-    color: var(--color-text-soft);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
 }
 
 .upload-dropzone {
-    padding: 22px;
-    border-radius: 22px;
-    border: 1.5px dashed rgba(106, 92, 255, 0.28);
-    background: rgba(241, 238, 255, 0.4);
+    padding: 32px;
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-border);
+    background: var(--color-canvas);
+    text-align: center;
+    transition: border-color var(--transition);
+}
+
+.upload-dropzone:hover {
+    border-color: var(--color-text-muted);
 }
 
 .preview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 12px;
+    margin-top: 12px;
 }
 
 .preview-card {
     overflow: hidden;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.78);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
 }
 
@@ -131,34 +140,35 @@
 
 .preview-card span {
     display: block;
-    padding: 10px 12px;
-    font-size: 0.82rem;
-    color: var(--color-text-soft);
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Image wrapper for remove button overlay */
 .preview-card-img-wrap {
     position: relative;
 }
 
 .preview-remove-btn {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff;
-    font-size: 0.7rem;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 0.8rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: none;
     opacity: 0;
-    transition: opacity 0.2s ease, background 0.2s ease;
-    z-index: 2;
+    transition: opacity var(--transition);
 }
 
 .preview-card:hover .preview-remove-btn {
@@ -166,15 +176,11 @@
 }
 
 .preview-remove-btn:hover {
-    background: rgba(213, 64, 90, 0.85);
-}
-
-/* Scale down user pages by 15% */
-body[data-role="user"] .page-content {
-    font-size: 0.85em;
+    background: var(--color-pastel-red-bg);
+    color: var(--color-pastel-red-text);
+    border-color: var(--color-pastel-red-bg);
 }
 
 body[data-role="user"] .page-title h1 {
-    font-size: clamp(1.8rem, 2.1vw, 2.3rem);
+    font-size: clamp(1.8rem, 2.5vw, 2.8rem);
 }
-

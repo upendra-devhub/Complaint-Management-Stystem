@@ -37,7 +37,7 @@
             event.preventDefault();
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> Signing in...';
+            submitButton.innerHTML = '<i class="ph ph-arrow-repeat"></i> Signing in...';
 
             try {
                 const payload = {
@@ -52,7 +52,7 @@
                 utils.showToast(error.message, "error");
             } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Login <i class="bi bi-arrow-right"></i>';
+                submitButton.innerHTML = 'Login <i class="ph ph-arrow-right"></i>';
             }
         });
     }
@@ -73,7 +73,7 @@
 
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> Creating account...';
+            submitButton.innerHTML = '<i class="ph ph-arrow-repeat"></i> Creating account...';
 
             try {
                 const payload = {
@@ -96,7 +96,7 @@
                 utils.showToast(error.message, "error");
             } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Register <i class="bi bi-arrow-right"></i>';
+                submitButton.innerHTML = 'Register <i class="ph ph-arrow-right"></i>';
             }
         });
     }

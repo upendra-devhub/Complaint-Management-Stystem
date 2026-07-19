@@ -32,7 +32,7 @@
             '<div class="form-field"><label for="newPassword">New Password</label>',
             '<input class="field-control" id="newPassword" name="newPassword" type="password" placeholder="Leave blank to keep current password"></div>',
             "</div>",
-            '<button class="btn btn-primary" type="submit">Save Profile <i class="bi bi-arrow-right"></i></button>',
+            '<button class="btn btn-primary" type="submit">Save Profile <i class="ph ph-arrow-right"></i></button>',
             "</form>"
         ].join("");
     }
@@ -89,7 +89,7 @@
             event.preventDefault();
             const button = form.querySelector('button[type="submit"]');
             button.disabled = true;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';
+            button.innerHTML = '<i class="ph ph-arrow-repeat"></i> Saving...';
 
             try {
                 const payload = {
@@ -116,7 +116,7 @@
                 utils.showToast(error.message, "error");
             } finally {
                 button.disabled = false;
-                button.innerHTML = 'Save Profile <i class="bi bi-arrow-right"></i>';
+                button.innerHTML = 'Save Profile <i class="ph ph-arrow-right"></i>';
             }
         });
     }
