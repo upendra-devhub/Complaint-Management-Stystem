@@ -24,10 +24,22 @@ const createComplaintService=async(complaintData,userId,imageUrls=[])=>{
     }
 
     //generating the complaint id
+    const year = new Date().getFullYear();
+    
+    // Find the latest complaint for this year to get the highest sequence number
+    const latestComplaint = await Complaint.findOne({
+        complaintId: new RegExp(`^CMP-${year}-`)
+    }).sort({ complaintId: -1 });
 
-    const year=new Date().getFullYear();
-    const totalComplaints=await Complaint.countDocuments();
-    const complaintId=`CMP-${year}-${String(totalComplaints+1).padStart(4,"0")}`
+    let nextSeq = 1;
+    if (latestComplaint && latestComplaint.complaintId) {
+        const parts = latestComplaint.complaintId.split('-');
+        if (parts.length === 3) {
+            nextSeq = parseInt(parts[2], 10) + 1;
+        }
+    }
+
+    const complaintId = `CMP-${year}-${String(nextSeq).padStart(4, "0")}`;
 
     //create Complaint
 
